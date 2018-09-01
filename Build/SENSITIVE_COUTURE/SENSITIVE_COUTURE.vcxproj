@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_XKEYCHECK_H</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>G:\DevelopProj\Sensitive Couture for Interactive Garment Modeling and Editing\SENSITIVE_COUTURE\DelFEM\include;G:\DevelopProj\Sensitive Couture for Interactive Garment Modeling and Editing\SENSITIVE_COUTURE</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../SENSITIVE_COUTURE\DelFEM\include;$(SolutionDir)/../SENSITIVE_COUTURE</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
