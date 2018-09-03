@@ -17,7 +17,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #if defined(__VISUALC__)
-#pragma warning( disable : 4786 )   // C4786‚È‚ñ‚Ä•\Ž¦‚·‚ñ‚È( ß„Dß)ºÞÙ§
+#pragma warning( disable : 4786 )   // C4786‚È‚ñ‚Ä•\Ž¦‚·‚ñ‚È( ß„D?ºÞÙ§
 #endif
 #define for if(0); else for
 

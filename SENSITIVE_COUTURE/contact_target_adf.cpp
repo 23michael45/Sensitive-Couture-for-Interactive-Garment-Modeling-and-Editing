@@ -22,135 +22,135 @@
 #include "delfem/vector3d.h"
 #include "contact_target.h"
 
-/*
-static inline double Length3D(const double p0[3], const double p1[3]){
-	return sqrt( (p1[0]-p0[0])*(p1[0]-p0[0]) + (p1[1]-p0[1])*(p1[1]-p0[1]) + (p1[2]-p0[2])*(p1[2]-p0[2]) );
-}
+ /*
+ static inline double Length3D(const double p0[3], const double p1[3]){
+	 return sqrt( (p1[0]-p0[0])*(p1[0]-p0[0]) + (p1[1]-p0[1])*(p1[1]-p0[1]) + (p1[2]-p0[2])*(p1[2]-p0[2]) );
+ }
 
-static inline double Length3D(const double v[3]){
-	return sqrt( v[0]*v[0] + v[1]*v[1] + v[2]*v[2] );
-}
- */
+ static inline double Length3D(const double v[3]){
+	 return sqrt( v[0]*v[0] + v[1]*v[1] + v[2]*v[2] );
+ }
+  */
 
-CContactTarget3D_AdaptiveDistanceField3D::CContactTarget3D_AdaptiveDistanceField3D(){
+CContactTarget3D_AdaptiveDistanceField3D::CContactTarget3D_AdaptiveDistanceField3D() {
 	this->is_show_cage = false;
 	//	this->is_show_cage = true;	
 	this->nIsoTri_ = 0;
 	this->aIsoTri_ = 0;
 	this->aIsoEdge_ = 0;
-  color_[0] = 1.0;
-  color_[1] = 1.0;
-  color_[2] = 1.0;
+	color_[0] = 1.0;
+	color_[1] = 1.0;
+	color_[2] = 1.0;
 }
 
 CContactTarget3D_AdaptiveDistanceField3D::~CContactTarget3D_AdaptiveDistanceField3D()
 {
-    if( this->aIsoTri_  != 0 ){ delete[] this->aIsoTri_; }
-    if( this->aIsoEdge_ != 0 ){ delete[] this->aIsoEdge_; }
+	if (this->aIsoTri_ != 0) { delete[] this->aIsoTri_; }
+	if (this->aIsoEdge_ != 0) { delete[] this->aIsoEdge_; }
 }
 
 void CContactTarget3D_AdaptiveDistanceField3D::SetUp
-(const CContactTarget3D& ct, 
- double bb[6])
+(const CContactTarget3D& ct,
+	double bb[6])
 {
-	aNode.reserve(1024*64);
+	aNode.reserve(1024 * 64);
 	aNode.resize(1);
 	CNode no;
 	{
-		no.cent_[0] = (bb[0]+bb[1])*0.5;
-		no.cent_[1] = (bb[2]+bb[3])*0.5;
-		no.cent_[2] = (bb[4]+bb[5])*0.5;
-		no.hw_ = (bb[1]-bb[0]) > (bb[3]-bb[2]) ? (bb[1]-bb[0])*0.5 : (bb[3]-bb[2])*0.5;
-		no.hw_ = no.hw_ > (bb[5]-bb[4])*0.5 ? no.hw_ : (bb[5]-bb[4])*0.5;
-    no.hw_ *= 1.1234;
+		no.cent_[0] = (bb[0] + bb[1])*0.5;
+		no.cent_[1] = (bb[2] + bb[3])*0.5;
+		no.cent_[2] = (bb[4] + bb[5])*0.5;
+		no.hw_ = (bb[1] - bb[0]) > (bb[3] - bb[2]) ? (bb[1] - bb[0])*0.5 : (bb[3] - bb[2])*0.5;
+		no.hw_ = no.hw_ > (bb[5] - bb[4])*0.5 ? no.hw_ : (bb[5] - bb[4])*0.5;
+		no.hw_ *= 1.1234;
 		no.SetCornerDist(ct);
-		no.MakeChildTree(ct,aNode,no.hw_*(0.99/64.0),no.hw_*(1.01/4.0));
-//		no.MakeChildTree(ct,aNode,no.hw_*(0.99/128.0),no.hw_*(1.01/4.0));    
-//		no.MakeChildTree(ct,aNode,no.hw_*(0.99/32.0),no.hw_*(1.01/4.0));    
+		no.MakeChildTree(ct, aNode, no.hw_*(0.99 / 64.0), no.hw_*(1.01 / 4.0));
+		//		no.MakeChildTree(ct,aNode,no.hw_*(0.99/128.0),no.hw_*(1.01/4.0));    
+		//		no.MakeChildTree(ct,aNode,no.hw_*(0.99/32.0),no.hw_*(1.01/4.0));    
 	}
 	aNode[0] = no;
-  std::cout << "ADF Oct-tree Node Size : " << aNode.size() << std::endl;
-  ////
+	std::cout << "ADF Oct-tree Node Size : " << aNode.size() << std::endl;
+	////
 	dist_min = no.dists_[0];
 	dist_max = dist_min;
-	for(unsigned int ino=0;ino<aNode.size();ino++){
-		for(unsigned int i=0;i<8;i++){
+	for (unsigned int ino = 0; ino < aNode.size(); ino++) {
+		for (unsigned int i = 0; i < 8; i++) {
 			const double dist = aNode[ino].dists_[i];
-			dist_min = ( dist < dist_min ) ? dist : dist_min;
-			dist_max = ( dist > dist_max ) ? dist : dist_max;
+			dist_min = (dist < dist_min) ? dist : dist_min;
+			dist_max = (dist > dist_max) ? dist : dist_max;
 		}
-	}		
+	}
 	std::cout << "dist min max" << dist_min << " " << dist_max << std::endl;
-	if( aIsoTri_ != 0 ){ delete aIsoTri_; aIsoTri_ = 0; }
+	if (aIsoTri_ != 0) { delete aIsoTri_; aIsoTri_ = 0; }
 	nIsoTri_ = 0;
 }
 
 void CContactTarget3D_AdaptiveDistanceField3D::Draw() const {
-  //		std::cout << "ADF" << aNode.size() << std::endl;
-  const bool is_lighting = ::glIsEnabled(GL_LIGHTING);
-  ::glDisable(GL_LIGHTING);
-	if( aNode.size() > 0 && is_show_cage ){ 
-		aNode[0].DrawThisAndChild_Wire(aNode); 
-  }
+	//		std::cout << "ADF" << aNode.size() << std::endl;
+	const bool is_lighting = ::glIsEnabled(GL_LIGHTING);
+	::glDisable(GL_LIGHTING);
+	if (aNode.size() > 0 && is_show_cage) {
+		aNode[0].DrawThisAndChild_Wire(aNode);
+	}
 
-	if( this->nIsoTri_ != 0 ){		
-    ::glColor3dv(color_);
+	if (this->nIsoTri_ != 0) {
+		::glColor3dv(color_);
 		::glEnableClientState(GL_VERTEX_ARRAY);
-		::glVertexPointer(3 , GL_DOUBLE, 0 , aIsoTri_);
-		::glDrawArrays(GL_TRIANGLES, 0 , nIsoTri_*3);		
+		::glVertexPointer(3, GL_DOUBLE, 0, aIsoTri_);
+		::glDrawArrays(GL_TRIANGLES, 0, nIsoTri_ * 3);
 		::glDisableClientState(GL_VERTEX_ARRAY);
 	}
-	if( this->aIsoEdge_ != 0 ){
-    ::glColor3d(0,0,0);
+	if (this->aIsoEdge_ != 0) {
+		::glColor3d(0, 0, 0);
 		::glEnableClientState(GL_VERTEX_ARRAY);
-		::glVertexPointer(3 , GL_DOUBLE, 0 , aIsoEdge_);
-		::glDrawArrays(GL_LINES, 0 , nIsoTri_*6);
+		::glVertexPointer(3, GL_DOUBLE, 0, aIsoEdge_);
+		::glDrawArrays(GL_LINES, 0, nIsoTri_ * 6);
 		::glDisableClientState(GL_VERTEX_ARRAY);
 	}
-  if( is_lighting ){ ::glEnable(GL_LIGHTING); }
+	if (is_lighting) { ::glEnable(GL_LIGHTING); }
 }
 
 // return penetration depth (inside is positive)
 double CContactTarget3D_AdaptiveDistanceField3D::Projection
 (double px, double py, double pz,
- double n[3]) const // normal outward
+	double n[3]) const // normal outward
 {
 	const CNode& no = aNode[0];
-	if( fabs(px-no.cent_[0]) > no.hw_ || fabs(py-no.cent_[1]) > no.hw_ || fabs(pz-no.cent_[2]) > no.hw_ ){
-		n[0] = no.cent_[0]-px;
-		n[1] = no.cent_[1]-py;
-		n[2] = no.cent_[2]-pz;
-		const double invlen = 1.0/Com::Length3D(n);
-		for(unsigned int i=0;i<3;i++){ n[0] *= invlen; }
+	if (fabs(px - no.cent_[0]) > no.hw_ || fabs(py - no.cent_[1]) > no.hw_ || fabs(pz - no.cent_[2]) > no.hw_) {
+		n[0] = no.cent_[0] - px;
+		n[1] = no.cent_[1] - py;
+		n[2] = no.cent_[2] - pz;
+		const double invlen = 1.0 / Com::Length3D(n);
+		for (unsigned int i = 0; i < 3; i++) { n[0] *= invlen; }
 		return -no.hw_;
 	}
-	return no.FindDistNormal(px,py,pz, n, aNode);
+	return no.FindDistNormal(px, py, pz, n, aNode);
 }
 
-void CContactTarget3D_AdaptiveDistanceField3D::BuildIsoSurface_MarchingCube(){
+void CContactTarget3D_AdaptiveDistanceField3D::BuildIsoSurface_MarchingCube() {
 	std::vector<double> aTri;
-	aTri.reserve(1024*32);
-	aNode[0].GenerateIsoSurface(aTri,aNode);
-	if( this->aIsoTri_ != 0 ) delete aIsoTri_;
-	aIsoTri_ = new double [aTri.size()];
-	for(unsigned int i=0;i<aTri.size();i++){ aIsoTri_[i] = aTri[i]; }
-	nIsoTri_ = aTri.size()/9;
+	aTri.reserve(1024 * 32);
+	aNode[0].GenerateIsoSurface(aTri, aNode);
+	if (this->aIsoTri_ != 0) delete aIsoTri_;
+	aIsoTri_ = new double[aTri.size()];
+	for (unsigned int i = 0; i < aTri.size(); i++) { aIsoTri_[i] = aTri[i]; }
+	nIsoTri_ = aTri.size() / 9;
 }
 
-void CContactTarget3D_AdaptiveDistanceField3D::BuildMarchingCubeEdge(){
-	if( nIsoTri_ == 0 ){ this->BuildIsoSurface_MarchingCube(); }
-	if( this->aIsoEdge_ != 0 ){ delete aIsoEdge_; }
-	aIsoEdge_ = new double [nIsoTri_*18];
-	for(unsigned int itri=0;itri<nIsoTri_;itri++){
-		for(unsigned int i=0;i<3;i++){
-			aIsoEdge_[itri*18+0 +i] = aIsoTri_[itri*9+0+i];
-			aIsoEdge_[itri*18+3 +i] = aIsoTri_[itri*9+3+i];
-			
-			aIsoEdge_[itri*18+6 +i] = aIsoTri_[itri*9+3+i];
-			aIsoEdge_[itri*18+9 +i] = aIsoTri_[itri*9+6+i];
-			
-			aIsoEdge_[itri*18+12+i] = aIsoTri_[itri*9+6+i];
-			aIsoEdge_[itri*18+15+i] = aIsoTri_[itri*9+0+i];			
+void CContactTarget3D_AdaptiveDistanceField3D::BuildMarchingCubeEdge() {
+	if (nIsoTri_ == 0) { this->BuildIsoSurface_MarchingCube(); }
+	if (this->aIsoEdge_ != 0) { delete aIsoEdge_; }
+	aIsoEdge_ = new double[nIsoTri_ * 18];
+	for (unsigned int itri = 0; itri < nIsoTri_; itri++) {
+		for (unsigned int i = 0; i < 3; i++) {
+			aIsoEdge_[itri * 18 + 0 + i] = aIsoTri_[itri * 9 + 0 + i];
+			aIsoEdge_[itri * 18 + 3 + i] = aIsoTri_[itri * 9 + 3 + i];
+
+			aIsoEdge_[itri * 18 + 6 + i] = aIsoTri_[itri * 9 + 3 + i];
+			aIsoEdge_[itri * 18 + 9 + i] = aIsoTri_[itri * 9 + 6 + i];
+
+			aIsoEdge_[itri * 18 + 12 + i] = aIsoTri_[itri * 9 + 6 + i];
+			aIsoEdge_[itri * 18 + 15 + i] = aIsoTri_[itri * 9 + 0 + i];
 		}
 	}
 }
@@ -158,91 +158,91 @@ void CContactTarget3D_AdaptiveDistanceField3D::BuildMarchingCubeEdge(){
 
 CContactTarget3D_AdaptiveDistanceField3D::CNode::CNode()
 {
-	cent_[0] = 0;	cent_[1] = 0;	cent_[2] = 0;												  
+	cent_[0] = 0;	cent_[1] = 0;	cent_[2] = 0;
 	hw_ = 0;
 	ichilds_[0] = -1;	ichilds_[1] = -1;	ichilds_[2] = -1;	ichilds_[3] = -1;
-	ichilds_[4] = -1;	ichilds_[5] = -1;	ichilds_[6] = -1;	ichilds_[7] = -1;			
+	ichilds_[4] = -1;	ichilds_[5] = -1;	ichilds_[6] = -1;	ichilds_[7] = -1;
 	dists_[0] = 0;		dists_[1] = 0;		dists_[2] = 0;		dists_[3] = 0;
-	dists_[4] = 0;		dists_[5] = 0;		dists_[6] = 0;		dists_[7] = 0;			
+	dists_[4] = 0;		dists_[5] = 0;		dists_[6] = 0;		dists_[7] = 0;
 }
 CContactTarget3D_AdaptiveDistanceField3D::CNode::CNode(const CNode& no)
 {
-	cent_[0] = no.cent_[0];	
-	cent_[1] = no.cent_[1];			
+	cent_[0] = no.cent_[0];
+	cent_[1] = no.cent_[1];
 	cent_[2] = no.cent_[2];
 	hw_ = no.hw_;
 	////
 	ichilds_[0] = no.ichilds_[0];	ichilds_[1] = no.ichilds_[1];	ichilds_[2] = no.ichilds_[2];	ichilds_[3] = no.ichilds_[3];
 	ichilds_[4] = no.ichilds_[4];	ichilds_[5] = no.ichilds_[5];	ichilds_[6] = no.ichilds_[6];	ichilds_[7] = no.ichilds_[7];
 	////
-	dists_[0] = no.dists_[0];		dists_[1] = no.dists_[1];		dists_[2] = no.dists_[2];		dists_[3] = no.dists_[3];			
+	dists_[0] = no.dists_[0];		dists_[1] = no.dists_[1];		dists_[2] = no.dists_[2];		dists_[3] = no.dists_[3];
 	dists_[4] = no.dists_[4];		dists_[5] = no.dists_[5];		dists_[6] = no.dists_[6];		dists_[7] = no.dists_[7];
 }
 
 void CContactTarget3D_AdaptiveDistanceField3D::CNode::SetCornerDist(const CContactTarget3D& ct)
 {
 	double n[3];
-	dists_[0] = ct.Projection(cent_[0]-hw_, cent_[1]-hw_, cent_[2]-hw_, n);
-	dists_[1] = ct.Projection(cent_[0]+hw_, cent_[1]-hw_, cent_[2]-hw_, n);
-	dists_[2] = ct.Projection(cent_[0]+hw_, cent_[1]+hw_, cent_[2]-hw_, n);
-	dists_[3] = ct.Projection(cent_[0]-hw_, cent_[1]+hw_, cent_[2]-hw_, n);
-	dists_[4] = ct.Projection(cent_[0]-hw_, cent_[1]-hw_, cent_[2]+hw_, n);
-	dists_[5] = ct.Projection(cent_[0]+hw_, cent_[1]-hw_, cent_[2]+hw_, n);
-	dists_[6] = ct.Projection(cent_[0]+hw_, cent_[1]+hw_, cent_[2]+hw_, n);
-	dists_[7] = ct.Projection(cent_[0]-hw_, cent_[1]+hw_, cent_[2]+hw_, n);			
+	dists_[0] = ct.Projection(cent_[0] - hw_, cent_[1] - hw_, cent_[2] - hw_, n);
+	dists_[1] = ct.Projection(cent_[0] + hw_, cent_[1] - hw_, cent_[2] - hw_, n);
+	dists_[2] = ct.Projection(cent_[0] + hw_, cent_[1] + hw_, cent_[2] - hw_, n);
+	dists_[3] = ct.Projection(cent_[0] - hw_, cent_[1] + hw_, cent_[2] - hw_, n);
+	dists_[4] = ct.Projection(cent_[0] - hw_, cent_[1] - hw_, cent_[2] + hw_, n);
+	dists_[5] = ct.Projection(cent_[0] + hw_, cent_[1] - hw_, cent_[2] + hw_, n);
+	dists_[6] = ct.Projection(cent_[0] + hw_, cent_[1] + hw_, cent_[2] + hw_, n);
+	dists_[7] = ct.Projection(cent_[0] - hw_, cent_[1] + hw_, cent_[2] + hw_, n);
 }
 
 void CContactTarget3D_AdaptiveDistanceField3D::CNode::Draw_Wire() const
 {
 	::glLineWidth(1);
-	::glColor3d(0,0,0);
+	::glColor3d(0, 0, 0);
 	::glBegin(GL_LINES);
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]-hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]-hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]-hw_);
-	
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]-hw_);			
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] - hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] - hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] - hw_);
+
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] - hw_);
 	////
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]+hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]+hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]+hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]+hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]+hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] + hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] + hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] + hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] + hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] + hw_);
 	////
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]-hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]-hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]+hw_, cent_[1]+hw_, cent_[2]+hw_);
-	
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]-hw_);
-	::glVertex3d(cent_[0]-hw_, cent_[1]+hw_, cent_[2]+hw_);
-	
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] - hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] - hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] + hw_, cent_[1] + hw_, cent_[2] + hw_);
+
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] - hw_);
+	::glVertex3d(cent_[0] - hw_, cent_[1] + hw_, cent_[2] + hw_);
+
 	::glEnd();
 }
 
-void CContactTarget3D_AdaptiveDistanceField3D::CNode::DrawThisAndChild_Wire(const std::vector<CNode>& aNo) const 
-{			
+void CContactTarget3D_AdaptiveDistanceField3D::CNode::DrawThisAndChild_Wire(const std::vector<CNode>& aNo) const
+{
 	//			std::cout << "ichild " << ichilds_[0] << " " << ichilds_[1] << " " << ichilds_[2] << " " << ichilds_[3] << std::endl;
-	if( ichilds_[0] == -1 ){ 
+	if (ichilds_[0] == -1) {
 		Draw_Wire();
-		return; 
-	}			
+		return;
+	}
 	aNo[ichilds_[0]].DrawThisAndChild_Wire(aNo);
 	aNo[ichilds_[1]].DrawThisAndChild_Wire(aNo);
 	aNo[ichilds_[2]].DrawThisAndChild_Wire(aNo);
@@ -250,291 +250,291 @@ void CContactTarget3D_AdaptiveDistanceField3D::CNode::DrawThisAndChild_Wire(cons
 	aNo[ichilds_[4]].DrawThisAndChild_Wire(aNo);
 	aNo[ichilds_[5]].DrawThisAndChild_Wire(aNo);
 	aNo[ichilds_[6]].DrawThisAndChild_Wire(aNo);
-	aNo[ichilds_[7]].DrawThisAndChild_Wire(aNo);			
-}		
+	aNo[ichilds_[7]].DrawThisAndChild_Wire(aNo);
+}
 
 void CContactTarget3D_AdaptiveDistanceField3D::CNode::MakeChildTree
 (const CContactTarget3D& ct, std::vector<CNode>& aNo, double min_hw, double max_hw)
 {
-	if ( hw_*0.5 < min_hw) {
+	if (hw_*0.5 < min_hw) {
 		ichilds_[0] = -1;
-		return;				
+		return;
 	}
 	double n[3];
 	////Edges
-   const double va100 = ct.Projection(cent_[0],    cent_[1]-hw_,cent_[2]-hw_,n);
-   const double va210 = ct.Projection(cent_[0]+hw_,cent_[1],    cent_[2]-hw_,n);
-   const double va120 = ct.Projection(cent_[0],    cent_[1]+hw_,cent_[2]-hw_,n);
-   const double va010 = ct.Projection(cent_[0]-hw_,cent_[1],    cent_[2]-hw_,n);
-	
-   const double va001 = ct.Projection(cent_[0]-hw_,cent_[1]-hw_,cent_[2],	n);
-   const double va201 = ct.Projection(cent_[0]+hw_,cent_[1]-hw_,cent_[2],	n);
-   const double va221 = ct.Projection(cent_[0]+hw_,cent_[1]+hw_,cent_[2],	n);
-   const double va021 = ct.Projection(cent_[0]-hw_,cent_[1]+hw_,cent_[2],	n);
-	
-   const double va102 = ct.Projection(cent_[0],	   cent_[1]-hw_,cent_[2]+hw_, n);
-   const double va212 = ct.Projection(cent_[0]+hw_,cent_[1],    cent_[2]+hw_, n);
-   const double va122 = ct.Projection(cent_[0],    cent_[1]+hw_,cent_[2]+hw_, n);
-   const double va012 = ct.Projection(cent_[0]-hw_,cent_[1],    cent_[2]+hw_, n);
-	
+	const double va100 = ct.Projection(cent_[0], cent_[1] - hw_, cent_[2] - hw_, n);
+	const double va210 = ct.Projection(cent_[0] + hw_, cent_[1], cent_[2] - hw_, n);
+	const double va120 = ct.Projection(cent_[0], cent_[1] + hw_, cent_[2] - hw_, n);
+	const double va010 = ct.Projection(cent_[0] - hw_, cent_[1], cent_[2] - hw_, n);
+
+	const double va001 = ct.Projection(cent_[0] - hw_, cent_[1] - hw_, cent_[2], n);
+	const double va201 = ct.Projection(cent_[0] + hw_, cent_[1] - hw_, cent_[2], n);
+	const double va221 = ct.Projection(cent_[0] + hw_, cent_[1] + hw_, cent_[2], n);
+	const double va021 = ct.Projection(cent_[0] - hw_, cent_[1] + hw_, cent_[2], n);
+
+	const double va102 = ct.Projection(cent_[0], cent_[1] - hw_, cent_[2] + hw_, n);
+	const double va212 = ct.Projection(cent_[0] + hw_, cent_[1], cent_[2] + hw_, n);
+	const double va122 = ct.Projection(cent_[0], cent_[1] + hw_, cent_[2] + hw_, n);
+	const double va012 = ct.Projection(cent_[0] - hw_, cent_[1], cent_[2] + hw_, n);
+
 	////Faces
-	const double va101 = ct.Projection(cent_[0],	  cent_[1]-hw_,	cent_[2],	  	n);
-	const double va211 = ct.Projection(cent_[0]+hw_,cent_[1],		  cent_[2],	  	n);
-	const double va121 = ct.Projection(cent_[0],	  cent_[1]+hw_,	cent_[2],	  	n);
-	const double va011 = ct.Projection(cent_[0]-hw_,cent_[1],	  	cent_[2],		  n);
-	const double va110 = ct.Projection(cent_[0],   	cent_[1],		  cent_[2]-hw_,	n);
-	const double va112 = ct.Projection(cent_[0],	  cent_[1],		  cent_[2]+hw_,	n);
-	
+	const double va101 = ct.Projection(cent_[0], cent_[1] - hw_, cent_[2], n);
+	const double va211 = ct.Projection(cent_[0] + hw_, cent_[1], cent_[2], n);
+	const double va121 = ct.Projection(cent_[0], cent_[1] + hw_, cent_[2], n);
+	const double va011 = ct.Projection(cent_[0] - hw_, cent_[1], cent_[2], n);
+	const double va110 = ct.Projection(cent_[0], cent_[1], cent_[2] - hw_, n);
+	const double va112 = ct.Projection(cent_[0], cent_[1], cent_[2] + hw_, n);
+
 	////Center
-	const double va111 = ct.Projection(cent_[0],		cent_[1],		cent_[2],		n);
-	
-	if ( hw_*0.5 > max_hw ) goto MAKE_CHILDS;
-  
-  double min_dist;
-  {
-    min_dist = fabs(va111);
-    min_dist = ( fabs(va100) < min_dist ) ? fabs(va100) : min_dist;
-    min_dist = ( fabs(va210) < min_dist ) ? fabs(va210) : min_dist;
-    min_dist = ( fabs(va120) < min_dist ) ? fabs(va120) : min_dist;
-    min_dist = ( fabs(va010) < min_dist ) ? fabs(va010) : min_dist;    
-    
-    min_dist = ( fabs(va001) < min_dist ) ? fabs(va001) : min_dist;        
-    min_dist = ( fabs(va201) < min_dist ) ? fabs(va201) : min_dist;        
-    min_dist = ( fabs(va221) < min_dist ) ? fabs(va221) : min_dist;        
-    min_dist = ( fabs(va021) < min_dist ) ? fabs(va021) : min_dist;
-    
-    min_dist = ( fabs(va101) < min_dist ) ? fabs(va101) : min_dist;        
-    min_dist = ( fabs(va211) < min_dist ) ? fabs(va211) : min_dist;        
-    min_dist = ( fabs(va121) < min_dist ) ? fabs(va121) : min_dist;        
-    min_dist = ( fabs(va011) < min_dist ) ? fabs(va011) : min_dist;
-    
-    min_dist = ( fabs(va102) < min_dist ) ? fabs(va102) : min_dist;
-    min_dist = ( fabs(va212) < min_dist ) ? fabs(va212) : min_dist;
-    min_dist = ( fabs(va122) < min_dist ) ? fabs(va122) : min_dist;
-    min_dist = ( fabs(va012) < min_dist ) ? fabs(va012) : min_dist;            
-    min_dist = ( fabs(va110) < min_dist ) ? fabs(va110) : min_dist;
-    min_dist = ( fabs(va112) < min_dist ) ? fabs(va112) : min_dist;        
-  }
-  
-  if( min_dist > hw_*1.8 ){ // there is no mesh inside
-    ichilds_[0] = -1;	// no-child
-    return;
-  }
+	const double va111 = ct.Projection(cent_[0], cent_[1], cent_[2], n);
 
-  {
-    if( min_dist < min_hw ) goto MAKE_CHILDS;  
-  }
+	if (hw_*0.5 > max_hw) goto MAKE_CHILDS;
 
-  {
-    double t = min_hw*0.8;
-    if( fabs(va100-(dists_[0]+dists_[1])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va210-(dists_[1]+dists_[2])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va120-(dists_[2]+dists_[3])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va010-(dists_[3]+dists_[0])*0.5)>t ) goto MAKE_CHILDS;
-    
-    if( fabs(va102-(dists_[4]+dists_[5])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va212-(dists_[5]+dists_[6])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va122-(dists_[6]+dists_[7])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va012-(dists_[7]+dists_[4])*0.5)>t ) goto MAKE_CHILDS;
-    
-    if( fabs(va001-(dists_[0]+dists_[4])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va201-(dists_[1]+dists_[5])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va221-(dists_[2]+dists_[6])*0.5)>t ) goto MAKE_CHILDS;
-    if( fabs(va021-(dists_[3]+dists_[7])*0.5)>t ) goto MAKE_CHILDS;             
-    
-    if( fabs(va101-(dists_[0]+dists_[1]+dists_[4]+dists_[5])*0.25)>t ) goto MAKE_CHILDS;
-    if( fabs(va211-(dists_[1]+dists_[2]+dists_[5]+dists_[6])*0.25)>t ) goto MAKE_CHILDS;
-    if( fabs(va121-(dists_[2]+dists_[3]+dists_[6]+dists_[7])*0.25)>t ) goto MAKE_CHILDS;
-    if( fabs(va011-(dists_[3]+dists_[0]+dists_[7]+dists_[4])*0.25)>t ) goto MAKE_CHILDS;
-    if( fabs(va110-(dists_[0]+dists_[1]+dists_[2]+dists_[3])*0.25)>t ) goto MAKE_CHILDS;
-    if( fabs(va112-(dists_[4]+dists_[5]+dists_[6]+dists_[7])*0.25)>t ) goto MAKE_CHILDS;        
-    
-    if( fabs(va111-(dists_[0]+dists_[1]+dists_[2]+dists_[3]+dists_[4]+dists_[5]+dists_[6]+dists_[7])*0.125)>t ) goto MAKE_CHILDS;
-  }
+	double min_dist;
+	{
+		min_dist = fabs(va111);
+		min_dist = (fabs(va100) < min_dist) ? fabs(va100) : min_dist;
+		min_dist = (fabs(va210) < min_dist) ? fabs(va210) : min_dist;
+		min_dist = (fabs(va120) < min_dist) ? fabs(va120) : min_dist;
+		min_dist = (fabs(va010) < min_dist) ? fabs(va010) : min_dist;
+
+		min_dist = (fabs(va001) < min_dist) ? fabs(va001) : min_dist;
+		min_dist = (fabs(va201) < min_dist) ? fabs(va201) : min_dist;
+		min_dist = (fabs(va221) < min_dist) ? fabs(va221) : min_dist;
+		min_dist = (fabs(va021) < min_dist) ? fabs(va021) : min_dist;
+
+		min_dist = (fabs(va101) < min_dist) ? fabs(va101) : min_dist;
+		min_dist = (fabs(va211) < min_dist) ? fabs(va211) : min_dist;
+		min_dist = (fabs(va121) < min_dist) ? fabs(va121) : min_dist;
+		min_dist = (fabs(va011) < min_dist) ? fabs(va011) : min_dist;
+
+		min_dist = (fabs(va102) < min_dist) ? fabs(va102) : min_dist;
+		min_dist = (fabs(va212) < min_dist) ? fabs(va212) : min_dist;
+		min_dist = (fabs(va122) < min_dist) ? fabs(va122) : min_dist;
+		min_dist = (fabs(va012) < min_dist) ? fabs(va012) : min_dist;
+		min_dist = (fabs(va110) < min_dist) ? fabs(va110) : min_dist;
+		min_dist = (fabs(va112) < min_dist) ? fabs(va112) : min_dist;
+	}
+
+	if (min_dist > hw_*1.8) { // there is no mesh inside
+		ichilds_[0] = -1;	// no-child
+		return;
+	}
+
+	{
+		if (min_dist < min_hw) goto MAKE_CHILDS;
+	}
+
+	{
+		double t = min_hw * 0.8;
+		if (fabs(va100 - (dists_[0] + dists_[1])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va210 - (dists_[1] + dists_[2])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va120 - (dists_[2] + dists_[3])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va010 - (dists_[3] + dists_[0])*0.5) > t) goto MAKE_CHILDS;
+
+		if (fabs(va102 - (dists_[4] + dists_[5])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va212 - (dists_[5] + dists_[6])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va122 - (dists_[6] + dists_[7])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va012 - (dists_[7] + dists_[4])*0.5) > t) goto MAKE_CHILDS;
+
+		if (fabs(va001 - (dists_[0] + dists_[4])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va201 - (dists_[1] + dists_[5])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va221 - (dists_[2] + dists_[6])*0.5) > t) goto MAKE_CHILDS;
+		if (fabs(va021 - (dists_[3] + dists_[7])*0.5) > t) goto MAKE_CHILDS;
+
+		if (fabs(va101 - (dists_[0] + dists_[1] + dists_[4] + dists_[5])*0.25) > t) goto MAKE_CHILDS;
+		if (fabs(va211 - (dists_[1] + dists_[2] + dists_[5] + dists_[6])*0.25) > t) goto MAKE_CHILDS;
+		if (fabs(va121 - (dists_[2] + dists_[3] + dists_[6] + dists_[7])*0.25) > t) goto MAKE_CHILDS;
+		if (fabs(va011 - (dists_[3] + dists_[0] + dists_[7] + dists_[4])*0.25) > t) goto MAKE_CHILDS;
+		if (fabs(va110 - (dists_[0] + dists_[1] + dists_[2] + dists_[3])*0.25) > t) goto MAKE_CHILDS;
+		if (fabs(va112 - (dists_[4] + dists_[5] + dists_[6] + dists_[7])*0.25) > t) goto MAKE_CHILDS;
+
+		if (fabs(va111 - (dists_[0] + dists_[1] + dists_[2] + dists_[3] + dists_[4] + dists_[5] + dists_[6] + dists_[7])*0.125) > t) goto MAKE_CHILDS;
+	}
 
 	ichilds_[0] = -1;	// no-child
-  return;
-MAKE_CHILDS:		
+	return;
+MAKE_CHILDS:
 	const unsigned int nchild0 = aNo.size();
-	aNo.resize(aNo.size()+8);
+	aNo.resize(aNo.size() + 8);
 	{	// left-bottom
 		ichilds_[0] = nchild0;
 		CNode no;
-		no.cent_[0]=cent_[0]-hw_*0.5;	no.cent_[1]=cent_[1]-hw_*0.5;	no.cent_[2]=cent_[2]-hw_*0.5;
-		no.hw_ = hw_*0.5;
-		no.dists_[0]=dists_[0];	no.dists_[1]=va100;		no.dists_[2]=va110;		no.dists_[3]=va010;
-		no.dists_[4]=va001;		no.dists_[5]=va101;		no.dists_[6]=va111;		no.dists_[7]=va011;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] - hw_ * 0.5;	no.cent_[1] = cent_[1] - hw_ * 0.5;	no.cent_[2] = cent_[2] - hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = dists_[0];	no.dists_[1] = va100;		no.dists_[2] = va110;		no.dists_[3] = va010;
+		no.dists_[4] = va001;		no.dists_[5] = va101;		no.dists_[6] = va111;		no.dists_[7] = va011;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[0]] = no;
 	}
 	{	// right-bottom
-		ichilds_[1] = nchild0+1;
+		ichilds_[1] = nchild0 + 1;
 		CNode no;
-		no.cent_[0]=cent_[0]+hw_*0.5;	no.cent_[1]=cent_[1]-hw_*0.5;	no.cent_[2]=cent_[2]-hw_*0.5;
-		no.hw_ = hw_*0.5;
-		no.dists_[0]=va100;		no.dists_[1]=dists_[1];	no.dists_[2]=va210;		no.dists_[3]=va110;
-		no.dists_[4]=va101;		no.dists_[5]=va201;		no.dists_[6]=va211;		no.dists_[7]=va111;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] + hw_ * 0.5;	no.cent_[1] = cent_[1] - hw_ * 0.5;	no.cent_[2] = cent_[2] - hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va100;		no.dists_[1] = dists_[1];	no.dists_[2] = va210;		no.dists_[3] = va110;
+		no.dists_[4] = va101;		no.dists_[5] = va201;		no.dists_[6] = va211;		no.dists_[7] = va111;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[1]] = no;
 	}
 	{	// right-top
-		ichilds_[2] = nchild0+2;
+		ichilds_[2] = nchild0 + 2;
 		CNode no;
-		no.cent_[0]=cent_[0]+hw_*0.5;	no.cent_[1]=cent_[1]+hw_*0.5;	no.cent_[2]=cent_[2]-hw_*0.5;
-		no.hw_ = hw_*0.5;	
-		no.dists_[0]=va110;		no.dists_[1]=va210;		no.dists_[2]=dists_[2];	no.dists_[3]=va120;
-		no.dists_[4]=va111;		no.dists_[5]=va211;		no.dists_[6]=va221;		no.dists_[7]=va121;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] + hw_ * 0.5;	no.cent_[1] = cent_[1] + hw_ * 0.5;	no.cent_[2] = cent_[2] - hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va110;		no.dists_[1] = va210;		no.dists_[2] = dists_[2];	no.dists_[3] = va120;
+		no.dists_[4] = va111;		no.dists_[5] = va211;		no.dists_[6] = va221;		no.dists_[7] = va121;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[2]] = no;
-	}			
+	}
 	{	// left-top
-		ichilds_[3] = nchild0+3;
+		ichilds_[3] = nchild0 + 3;
 		CNode no;
-		no.cent_[0]=cent_[0]-hw_*0.5;	no.cent_[1]=cent_[1]+hw_*0.5;	no.cent_[2]=cent_[2]-hw_*0.5;	
-		no.hw_ = hw_*0.5;	
-		no.dists_[0]=va010;		no.dists_[1]=va110;		no.dists_[2]=va120;		no.dists_[3]=dists_[3];
-		no.dists_[4]=va011;		no.dists_[5]=va111;		no.dists_[6]=va121;		no.dists_[7]=va021;	
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);				
+		no.cent_[0] = cent_[0] - hw_ * 0.5;	no.cent_[1] = cent_[1] + hw_ * 0.5;	no.cent_[2] = cent_[2] - hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va010;		no.dists_[1] = va110;		no.dists_[2] = va120;		no.dists_[3] = dists_[3];
+		no.dists_[4] = va011;		no.dists_[5] = va111;		no.dists_[6] = va121;		no.dists_[7] = va021;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[3]] = no;
 	}
-	
+
 	{	// left-bottom
-		ichilds_[4] = nchild0+4;
+		ichilds_[4] = nchild0 + 4;
 		CNode no;
-		no.cent_[0]=cent_[0]-hw_*0.5;	no.cent_[1]=cent_[1]-hw_*0.5;	no.cent_[2]=cent_[2]+hw_*0.5;
-		no.hw_ = hw_*0.5;
-		no.dists_[0]=va001;		no.dists_[1]=va101;		no.dists_[2]=va111;		no.dists_[3]=va011;
-		no.dists_[4]=dists_[4];	no.dists_[5]=va102;		no.dists_[6]=va112;		no.dists_[7]=va012;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] - hw_ * 0.5;	no.cent_[1] = cent_[1] - hw_ * 0.5;	no.cent_[2] = cent_[2] + hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va001;		no.dists_[1] = va101;		no.dists_[2] = va111;		no.dists_[3] = va011;
+		no.dists_[4] = dists_[4];	no.dists_[5] = va102;		no.dists_[6] = va112;		no.dists_[7] = va012;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[4]] = no;
 	}
 	{	// right-bottom
-		ichilds_[5] = nchild0+5;
+		ichilds_[5] = nchild0 + 5;
 		CNode no;
-		no.cent_[0]=cent_[0]+hw_*0.5;	no.cent_[1]=cent_[1]-hw_*0.5;	no.cent_[2]=cent_[2]+hw_*0.5;
-		no.hw_ = hw_*0.5;
-		no.dists_[0]=va101;		no.dists_[1]=va201;		no.dists_[2]=va211;		no.dists_[3]=va111;
-		no.dists_[4]=va102;		no.dists_[5]=dists_[5];	no.dists_[6]=va212;		no.dists_[7]=va112;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] + hw_ * 0.5;	no.cent_[1] = cent_[1] - hw_ * 0.5;	no.cent_[2] = cent_[2] + hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va101;		no.dists_[1] = va201;		no.dists_[2] = va211;		no.dists_[3] = va111;
+		no.dists_[4] = va102;		no.dists_[5] = dists_[5];	no.dists_[6] = va212;		no.dists_[7] = va112;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[5]] = no;
 	}
 	{	// right-top
-		ichilds_[6] = nchild0+6;
+		ichilds_[6] = nchild0 + 6;
 		CNode no;
-		no.cent_[0]=cent_[0]+hw_*0.5;	no.cent_[1]=cent_[1]+hw_*0.5;	no.cent_[2]=cent_[2]+hw_*0.5;
-		no.hw_ = hw_*0.5;	
-		no.dists_[0]=va111;		no.dists_[1]=va211;		no.dists_[2]=va221;		no.dists_[3]=va121;
-		no.dists_[4]=va112;		no.dists_[5]=va212;		no.dists_[6]=dists_[6];	no.dists_[7]=va122;
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);
+		no.cent_[0] = cent_[0] + hw_ * 0.5;	no.cent_[1] = cent_[1] + hw_ * 0.5;	no.cent_[2] = cent_[2] + hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va111;		no.dists_[1] = va211;		no.dists_[2] = va221;		no.dists_[3] = va121;
+		no.dists_[4] = va112;		no.dists_[5] = va212;		no.dists_[6] = dists_[6];	no.dists_[7] = va122;
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[6]] = no;
-	}			
+	}
 	{	// left-top
-		ichilds_[7] = nchild0+7;
+		ichilds_[7] = nchild0 + 7;
 		CNode no;
-		no.cent_[0]=cent_[0]-hw_*0.5;	no.cent_[1]=cent_[1]+hw_*0.5;	no.cent_[2]=cent_[2]+hw_*0.5;	
-		no.hw_ = hw_*0.5;	
-		no.dists_[0]=va011;		no.dists_[1]=va111;		no.dists_[2]=va121;		no.dists_[3]=va021;
-		no.dists_[4]=va012;		no.dists_[5]=va112;		no.dists_[6]=va122;		no.dists_[7]=dists_[7];	
-		no.MakeChildTree(ct, aNo,min_hw,max_hw);				
+		no.cent_[0] = cent_[0] - hw_ * 0.5;	no.cent_[1] = cent_[1] + hw_ * 0.5;	no.cent_[2] = cent_[2] + hw_ * 0.5;
+		no.hw_ = hw_ * 0.5;
+		no.dists_[0] = va011;		no.dists_[1] = va111;		no.dists_[2] = va121;		no.dists_[3] = va021;
+		no.dists_[4] = va012;		no.dists_[5] = va112;		no.dists_[6] = va122;		no.dists_[7] = dists_[7];
+		no.MakeChildTree(ct, aNo, min_hw, max_hw);
 		aNo[ichilds_[7]] = no;
-	}			
+	}
 	//			std::cout << "built" << ichilds_[0] << " " << ichilds_[1] << " " << ichilds_[2] << " " << ichilds_[3] << std::endl;
 	return;
 }
 
 double CContactTarget3D_AdaptiveDistanceField3D::CNode::FindDistNormal
 (double px, double py, double pz,
- double n[3],
- const std::vector<CNode>& aNo) const // normal outward
+	double n[3],
+	const std::vector<CNode>& aNo) const // normal outward
 {
-  if(   fabs(px-cent_[0]) >= hw_ 
-     || fabs(py-cent_[1]) >= hw_
-     || fabs(pz-cent_[2]) >= hw_ )
-  {
-    n[0] = px-cent_[0];
-    n[1] = py-cent_[1];
-    n[2] = pz-cent_[2];
-    const double dist = sqrt(n[0]*n[0]+n[1]*n[1]+n[2]*n[2]);
-    const double inv_dist = 1.0/dist;
-    n[0] *= inv_dist;
-    n[1] *= inv_dist;
-    n[2] *= inv_dist;    
-    return -dist;
-//    return dist;
-  }
-	if( ichilds_[0] == -1 ){
-		const double rx = (px-cent_[0])/hw_;
-		const double ry = (py-cent_[1])/hw_;
-		const double rz = (pz-cent_[2])/hw_;
-		double dist = 
-		( (1-rx)*(1-ry)*(1-rz)*dists_[0]
-		 +(1+rx)*(1-ry)*(1-rz)*dists_[1]
-		 +(1+rx)*(1+ry)*(1-rz)*dists_[2]
-		 +(1-rx)*(1+ry)*(1-rz)*dists_[3]
-		 +(1-rx)*(1-ry)*(1+rz)*dists_[4]
-		 +(1+rx)*(1-ry)*(1+rz)*dists_[5]
-		 +(1+rx)*(1+ry)*(1+rz)*dists_[6]
-		 +(1-rx)*(1+ry)*(1+rz)*dists_[7] )*0.125;
+	if (fabs(px - cent_[0]) >= hw_
+		|| fabs(py - cent_[1]) >= hw_
+		|| fabs(pz - cent_[2]) >= hw_)
+	{
+		n[0] = px - cent_[0];
+		n[1] = py - cent_[1];
+		n[2] = pz - cent_[2];
+		const double dist = sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+		const double inv_dist = 1.0 / dist;
+		n[0] *= inv_dist;
+		n[1] *= inv_dist;
+		n[2] *= inv_dist;
+		return -dist;
+		//    return dist;
+	}
+	if (ichilds_[0] == -1) {
+		const double rx = (px - cent_[0]) / hw_;
+		const double ry = (py - cent_[1]) / hw_;
+		const double rz = (pz - cent_[2]) / hw_;
+		double dist =
+			((1 - rx)*(1 - ry)*(1 - rz)*dists_[0]
+				+ (1 + rx)*(1 - ry)*(1 - rz)*dists_[1]
+				+ (1 + rx)*(1 + ry)*(1 - rz)*dists_[2]
+				+ (1 - rx)*(1 + ry)*(1 - rz)*dists_[3]
+				+ (1 - rx)*(1 - ry)*(1 + rz)*dists_[4]
+				+ (1 + rx)*(1 - ry)*(1 + rz)*dists_[5]
+				+ (1 + rx)*(1 + ry)*(1 + rz)*dists_[6]
+				+ (1 - rx)*(1 + ry)*(1 + rz)*dists_[7])*0.125;
 		////
 		n[0] =
-		(-(1-ry)*(1-rz)*dists_[0]
-		 +(1-ry)*(1-rz)*dists_[1]
-		 +(1+ry)*(1-rz)*dists_[2]
-		 -(1+ry)*(1-rz)*dists_[3]
-		 -(1-ry)*(1+rz)*dists_[4]
-		 +(1-ry)*(1+rz)*dists_[5]
-		 +(1+ry)*(1+rz)*dists_[6]
-		 -(1+ry)*(1+rz)*dists_[7] );
+			(-(1 - ry)*(1 - rz)*dists_[0]
+				+ (1 - ry)*(1 - rz)*dists_[1]
+				+ (1 + ry)*(1 - rz)*dists_[2]
+				- (1 + ry)*(1 - rz)*dists_[3]
+				- (1 - ry)*(1 + rz)*dists_[4]
+				+ (1 - ry)*(1 + rz)*dists_[5]
+				+ (1 + ry)*(1 + rz)*dists_[6]
+				- (1 + ry)*(1 + rz)*dists_[7]);
 		////
 		n[1] =
-		(-(1-rx)*(1-rz)*dists_[0]
-		 -(1+rx)*(1-rz)*dists_[1]
-		 +(1+rx)*(1-rz)*dists_[2]
-		 +(1-rx)*(1-rz)*dists_[3]
-		 -(1-rx)*(1+rz)*dists_[4]
-		 -(1+rx)*(1+rz)*dists_[5]
-		 +(1+rx)*(1+rz)*dists_[6]
-		 +(1-rx)*(1+rz)*dists_[7] );
+			(-(1 - rx)*(1 - rz)*dists_[0]
+				- (1 + rx)*(1 - rz)*dists_[1]
+				+ (1 + rx)*(1 - rz)*dists_[2]
+				+ (1 - rx)*(1 - rz)*dists_[3]
+				- (1 - rx)*(1 + rz)*dists_[4]
+				- (1 + rx)*(1 + rz)*dists_[5]
+				+ (1 + rx)*(1 + rz)*dists_[6]
+				+ (1 - rx)*(1 + rz)*dists_[7]);
 		////
 		n[2] =
-		(-(1-rx)*(1-ry)*dists_[0]
-		 -(1+rx)*(1-ry)*dists_[1]
-		 -(1+rx)*(1+ry)*dists_[2]
-		 -(1-rx)*(1+ry)*dists_[3]
-		 +(1-rx)*(1-ry)*dists_[4]
-		 +(1+rx)*(1-ry)*dists_[5]
-		 +(1+rx)*(1+ry)*dists_[6]
-		 +(1-rx)*(1+ry)*dists_[7] );
+			(-(1 - rx)*(1 - ry)*dists_[0]
+				- (1 + rx)*(1 - ry)*dists_[1]
+				- (1 + rx)*(1 + ry)*dists_[2]
+				- (1 - rx)*(1 + ry)*dists_[3]
+				+ (1 - rx)*(1 - ry)*dists_[4]
+				+ (1 + rx)*(1 - ry)*dists_[5]
+				+ (1 + rx)*(1 + ry)*dists_[6]
+				+ (1 - rx)*(1 + ry)*dists_[7]);
 		////
-		const double invlen = 1.0/Com::Length3D(n);
+		const double invlen = 1.0 / Com::Length3D(n);
 		n[0] *= -invlen;
 		n[1] *= -invlen;
 		n[2] *= -invlen;
-		return dist;				
+		return dist;
 	}
-	if( px<cent_[0] ){
-		if( py<cent_[1] ){
-			if( pz<cent_[2] ){	return aNo[ichilds_[0]].FindDistNormal(px,py,pz, n, aNo); }
-			else{				return aNo[ichilds_[4]].FindDistNormal(px,py,pz, n, aNo); }
+	if (px < cent_[0]) {
+		if (py < cent_[1]) {
+			if (pz < cent_[2]) { return aNo[ichilds_[0]].FindDistNormal(px, py, pz, n, aNo); }
+			else { return aNo[ichilds_[4]].FindDistNormal(px, py, pz, n, aNo); }
 		}
-		else{
-			if( pz<cent_[2] ){	return aNo[ichilds_[3]].FindDistNormal(px,py,pz, n, aNo); }
-			else{				return aNo[ichilds_[7]].FindDistNormal(px,py,pz, n, aNo); }
+		else {
+			if (pz < cent_[2]) { return aNo[ichilds_[3]].FindDistNormal(px, py, pz, n, aNo); }
+			else { return aNo[ichilds_[7]].FindDistNormal(px, py, pz, n, aNo); }
 		}
 	}
-	else{
-		if( py<cent_[1] ){
-			if( pz<cent_[2] ){	return aNo[ichilds_[1]].FindDistNormal(px,py,pz, n, aNo); }
-			else{				return aNo[ichilds_[5]].FindDistNormal(px,py,pz, n, aNo); }
+	else {
+		if (py < cent_[1]) {
+			if (pz < cent_[2]) { return aNo[ichilds_[1]].FindDistNormal(px, py, pz, n, aNo); }
+			else { return aNo[ichilds_[5]].FindDistNormal(px, py, pz, n, aNo); }
 		}
-		else{
-			if( pz<cent_[2] ){	return aNo[ichilds_[2]].FindDistNormal(px,py,pz, n, aNo); }
-			else{				return aNo[ichilds_[6]].FindDistNormal(px,py,pz, n, aNo); }
+		else {
+			if (pz < cent_[2]) { return aNo[ichilds_[2]].FindDistNormal(px, py, pz, n, aNo); }
+			else { return aNo[ichilds_[6]].FindDistNormal(px, py, pz, n, aNo); }
 		}
 	}
 }
 
-const int edgeTable[256]={
+const int edgeTable[256] = {
 	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 	0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
 	0x190, 0x99 , 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c,
@@ -566,7 +566,7 @@ const int edgeTable[256]={
 	0xe90, 0xf99, 0xc93, 0xd9a, 0xa96, 0xb9f, 0x895, 0x99c,
 	0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x99 , 0x190,
 	0xf00, 0xe09, 0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c,
-	0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x0   };
+	0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x0 };
 
 const int triTable[256][16] =
 {
@@ -832,85 +832,85 @@ const double phexflg[8][3] = {
 	{ -1, -1, -1 },
 	{ +1, -1, -1 },
 	{ +1, +1, -1 },
-	{ -1, +1, -1 },	
+	{ -1, +1, -1 },
 	{ -1, -1, +1 },
 	{ +1, -1, +1 },
 	{ +1, +1, +1 },
-	{ -1, +1, +1 },	
+	{ -1, +1, +1 },
 };
 
 void VertexInterp
-(double pIntp[3],  
- const double cent_[3], double hw_, 
- unsigned int ind0, unsigned int ind1, 
- double dist0, double dist1)
+(double pIntp[3],
+	const double cent_[3], double hw_,
+	unsigned int ind0, unsigned int ind1,
+	double dist0, double dist1)
 {
 	const double p0[3] = {
-		cent_[0]+hw_*phexflg[ind0][0],
-		cent_[1]+hw_*phexflg[ind0][1],
-		cent_[2]+hw_*phexflg[ind0][2] };
+		cent_[0] + hw_ * phexflg[ind0][0],
+		cent_[1] + hw_ * phexflg[ind0][1],
+		cent_[2] + hw_ * phexflg[ind0][2] };
 	const double p1[3] = {
-		cent_[0]+hw_*phexflg[ind1][0],
-		cent_[1]+hw_*phexflg[ind1][1],
-		cent_[2]+hw_*phexflg[ind1][2] };	
-	const double r0 = +dist1/(dist1-dist0);
-	const double r1 = -dist0/(dist1-dist0);
-	pIntp[0] = p0[0]*r0 + p1[0]*r1;
-	pIntp[1] = p0[1]*r0 + p1[1]*r1;
-	pIntp[2] = p0[2]*r0 + p1[2]*r1;	
+		cent_[0] + hw_ * phexflg[ind1][0],
+		cent_[1] + hw_ * phexflg[ind1][1],
+		cent_[2] + hw_ * phexflg[ind1][2] };
+	const double r0 = +dist1 / (dist1 - dist0);
+	const double r1 = -dist0 / (dist1 - dist0);
+	pIntp[0] = p0[0] * r0 + p1[0] * r1;
+	pIntp[1] = p0[1] * r0 + p1[1] * r1;
+	pIntp[2] = p0[2] * r0 + p1[2] * r1;
 }
 
 
 
 void CContactTarget3D_AdaptiveDistanceField3D::CNode::GenerateIsoSurface
 (std::vector<double>& aTri,
- const std::vector<CNode>& aNo) const
+	const std::vector<CNode>& aNo) const
 {
-	if( this->ichilds_[0] != -1 ){	// Evaluate Child Node
-		for(unsigned int i=0;i<8;i++){ aNo[ichilds_[i]].GenerateIsoSurface(aTri,aNo); }
+	if (this->ichilds_[0] != -1) {	// Evaluate Child Node
+		for (unsigned int i = 0; i < 8; i++) { aNo[ichilds_[i]].GenerateIsoSurface(aTri, aNo); }
 		return;
 	}
 	// Evaluate Dis Node
 	int cubeindex = 0;
 	{
-		if( dists_[0] < 0 ) cubeindex |= 1;
-		if( dists_[1] < 0 ) cubeindex |= 2;
-		if( dists_[2] < 0 ) cubeindex |= 4;
-		if( dists_[3] < 0 ) cubeindex |= 8;
-		if( dists_[4] < 0 ) cubeindex |= 16;
-		if( dists_[5] < 0 ) cubeindex |= 32;
-		if( dists_[6] < 0 ) cubeindex |= 64;
-		if( dists_[7] < 0 ) cubeindex |= 128;
-	}	
+		if (dists_[0] < 0) cubeindex |= 1;
+		if (dists_[1] < 0) cubeindex |= 2;
+		if (dists_[2] < 0) cubeindex |= 4;
+		if (dists_[3] < 0) cubeindex |= 8;
+		if (dists_[4] < 0) cubeindex |= 16;
+		if (dists_[5] < 0) cubeindex |= 32;
+		if (dists_[6] < 0) cubeindex |= 64;
+		if (dists_[7] < 0) cubeindex |= 128;
+	}
 	//	std::cout << "Cube Index" << cubeindex << std::endl;
 	double vertlist[12][3];
-	if (edgeTable[cubeindex] & 1)    VertexInterp(vertlist[0],  cent_,hw_, 0,1, dists_[0],dists_[1]);
-	if (edgeTable[cubeindex] & 2)    VertexInterp(vertlist[1],  cent_,hw_, 1,2, dists_[1],dists_[2]);
-	if (edgeTable[cubeindex] & 4)    VertexInterp(vertlist[2],  cent_,hw_, 2,3, dists_[2],dists_[3]);
-	if (edgeTable[cubeindex] & 8)    VertexInterp(vertlist[3],  cent_,hw_, 3,0, dists_[3],dists_[0]);
-	if (edgeTable[cubeindex] & 16)   VertexInterp(vertlist[4],  cent_,hw_, 4,5, dists_[4],dists_[5]);
-	if (edgeTable[cubeindex] & 32)   VertexInterp(vertlist[5],  cent_,hw_, 5,6, dists_[5],dists_[6]);
-	if (edgeTable[cubeindex] & 64)   VertexInterp(vertlist[6],  cent_,hw_, 6,7, dists_[6],dists_[7]);
-	if (edgeTable[cubeindex] & 128)  VertexInterp(vertlist[7],  cent_,hw_, 7,4, dists_[7],dists_[4]);
-	if (edgeTable[cubeindex] & 256)  VertexInterp(vertlist[8],  cent_,hw_, 0,4, dists_[0],dists_[4]);
-	if (edgeTable[cubeindex] & 512)  VertexInterp(vertlist[9],  cent_,hw_, 1,5, dists_[1],dists_[5]);
-	if (edgeTable[cubeindex] & 1024) VertexInterp(vertlist[10], cent_,hw_, 2,6, dists_[2],dists_[6]);
-	if (edgeTable[cubeindex] & 2048) VertexInterp(vertlist[11], cent_,hw_, 3,7, dists_[3],dists_[7]);
-	
-	for( unsigned int i=0;triTable[cubeindex][i]!=-1;i+=3 ){
+	if (edgeTable[cubeindex] & 1)    VertexInterp(vertlist[0], cent_, hw_, 0, 1, dists_[0], dists_[1]);
+	if (edgeTable[cubeindex] & 2)    VertexInterp(vertlist[1], cent_, hw_, 1, 2, dists_[1], dists_[2]);
+	if (edgeTable[cubeindex] & 4)    VertexInterp(vertlist[2], cent_, hw_, 2, 3, dists_[2], dists_[3]);
+	if (edgeTable[cubeindex] & 8)    VertexInterp(vertlist[3], cent_, hw_, 3, 0, dists_[3], dists_[0]);
+	if (edgeTable[cubeindex] & 16)   VertexInterp(vertlist[4], cent_, hw_, 4, 5, dists_[4], dists_[5]);
+	if (edgeTable[cubeindex] & 32)   VertexInterp(vertlist[5], cent_, hw_, 5, 6, dists_[5], dists_[6]);
+	if (edgeTable[cubeindex] & 64)   VertexInterp(vertlist[6], cent_, hw_, 6, 7, dists_[6], dists_[7]);
+	if (edgeTable[cubeindex] & 128)  VertexInterp(vertlist[7], cent_, hw_, 7, 4, dists_[7], dists_[4]);
+	if (edgeTable[cubeindex] & 256)  VertexInterp(vertlist[8], cent_, hw_, 0, 4, dists_[0], dists_[4]);
+	if (edgeTable[cubeindex] & 512)  VertexInterp(vertlist[9], cent_, hw_, 1, 5, dists_[1], dists_[5]);
+	if (edgeTable[cubeindex] & 1024) VertexInterp(vertlist[10], cent_, hw_, 2, 6, dists_[2], dists_[6]);
+	if (edgeTable[cubeindex] & 2048) VertexInterp(vertlist[11], cent_, hw_, 3, 7, dists_[3], dists_[7]);
+
+	for (unsigned int i = 0; triTable[cubeindex][i] != -1; i += 3) {
 		const unsigned int ind0 = aTri.size();
-		aTri.resize(ind0+9);
-		aTri[ind0+0] = vertlist[triTable[cubeindex][i  ]][0];
-		aTri[ind0+1] = vertlist[triTable[cubeindex][i  ]][1];
-		aTri[ind0+2] = vertlist[triTable[cubeindex][i  ]][2];
-		
-		aTri[ind0+3] = vertlist[triTable[cubeindex][i+1]][0];
-		aTri[ind0+4] = vertlist[triTable[cubeindex][i+1]][1];
-		aTri[ind0+5] = vertlist[triTable[cubeindex][i+1]][2];
-		
-		aTri[ind0+6] = vertlist[triTable[cubeindex][i+2]][0];
-		aTri[ind0+7] = vertlist[triTable[cubeindex][i+2]][1];
-		aTri[ind0+8] = vertlist[triTable[cubeindex][i+2]][2];		
+		aTri.resize(ind0 + 9);
+		aTri[ind0 + 0] = vertlist[triTable[cubeindex][i]][0];
+		aTri[ind0 + 1] = vertlist[triTable[cubeindex][i]][1];
+		aTri[ind0 + 2] = vertlist[triTable[cubeindex][i]][2];
+
+		aTri[ind0 + 3] = vertlist[triTable[cubeindex][i + 1]][0];
+		aTri[ind0 + 4] = vertlist[triTable[cubeindex][i + 1]][1];
+		aTri[ind0 + 5] = vertlist[triTable[cubeindex][i + 1]][2];
+
+		aTri[ind0 + 6] = vertlist[triTable[cubeindex][i + 2]][0];
+		aTri[ind0 + 7] = vertlist[triTable[cubeindex][i + 2]][1];
+		aTri[ind0 + 8] = vertlist[triTable[cubeindex][i + 2]][2];
 	}
 }
 

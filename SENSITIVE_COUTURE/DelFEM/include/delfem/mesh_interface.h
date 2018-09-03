@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /*! @file
-@brief 拪徾儊僢僔儏僋儔僗(Msh::CMesh_Interface)偺僀儞僞乕僼僃乕僗
+@brief 抽象网格类的接口（Msh :: CMesh_Interface）
 @author Nobuyuki Umetani
 */
 
@@ -41,39 +41,39 @@ namespace Msh{
 */
 //@{
 enum MSH_TYPE{
-    VERTEX,	//!< 捀揰梫慺
-    BAR,	//!< 慄暘梫慺
-    TRI,	//!< 嶰妏宍梫慺
-    QUAD,	//!< 係妏宍梫慺
-    TET,	//!< 巐柺懱梫慺
-    HEX		//!< 榋柺懱梫慺
+	VERTEX,	//!< 頂点要素
+	BAR,	//!< 線分要素
+	TRI,	//!< 三角形要素
+	QUAD,	//!< ４角形要素
+	TET,	//!< 四面体要素
+	HEX		//!< 六面体要素
 };
 
 ////////////////////////////////////////////////
 
 /*!
-@brief 儊僢僔儏僀儞僞乕僼僃乕僗僋儔僗
+@brief Mesh接口类
 @ingroup Msh
 */
 class  IMesh
 {
 public:
-	//! 嵗昗偺師尦傪摼傞
+	//! 获取坐标的尺寸
 	virtual unsigned int GetDimention() const = 0;
 	virtual void GetInfo(unsigned int id_msh,
         unsigned int& id_cad_part, unsigned int& id_msh_before_ext, unsigned int& inum_ext,
 		int& ilayer) const = 0;
-	//! 嵗昗偺攝楍傪摼傞
+	//! 获取坐标数组
 	virtual void GetCoord(std::vector<double>& coord) const = 0;
-	//! 僐僱僋僥傿價僥傿偺攝楍傪摼傞
+	//! 获得一系列连接
 	virtual MSH_TYPE GetConnectivity(unsigned int id_msh, std::vector<int>& lnods) const = 0;
-	//! 梫慺攝楍ID偺攝楍摼傞
+	//! 元素序列ID的序列
 	virtual std::vector<unsigned int> GetAry_ID() const = 0;
-	//! 曪娷娭學傪摼傞
+	//! 获得包含关系
 	virtual std::vector<unsigned int> GetIncludeElemIDAry(unsigned int id_msh) const = 0;
 };
 
-//! 俀師尦儊僢僔儏傪俁師尦偵幩塭偟偨儊僢僔儏偺僋儔僗
+//! 将二维网格投影到三维的网格类
 class CMeshProjector2Dto3D : public IMesh
 {
 public:

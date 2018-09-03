@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 ////////////////////////////////////////////////////////////////
-// CadObj2D.cpp : 俀師尦俠俙俢儌僨儖僋儔僗(CCadObj2D)偺幚憰
+// CadObj2D.cpp : 2D CAD模型类（CCadObj2D）的实现
 ////////////////////////////////////////////////////////////////
 
 #if defined(__VISUALC__)
@@ -1088,7 +1088,7 @@ bool CCadObj2D::SetCurve_Polyline(const unsigned int id_e)
   CEdge2D& e = this->GetEdgeRef(id_e);
   CEdge2D e_old = e;
   ////////////////////////////////
-  // 偙偙偐傜傪尰嵼偺CurveType偵傛偭偰寛傔傞,師偺愝掕偼捈慄偺応崌
+  // 此处的下一个设置由当前曲线类型确定，如果是直线
   const CVector2D& pos = e_old.po_s;
   const CVector2D& poe = e_old.po_e;
   std::vector<Com::CVector2D> aCo;

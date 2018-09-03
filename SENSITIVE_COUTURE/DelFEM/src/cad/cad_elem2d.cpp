@@ -29,8 +29,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "delfem/cad/cad_elem2d.h"
 
 
-// 曈偺僶僂儞僨傿儞僌儃僢僋僗傪摼傞
-// po_s, po_e偵抣偑僙僢僩偝傟偰偄側偄偲惓忢偵摦偐側偄偺偱拲堄
+//获取边缘边界框
+//如果没有设置po_s和po_e，除非它们正常移动，否则请小心
 void Cad::CEdge2D::GetBoundingBox( double& x_min, double& x_max, double& y_min, double& y_max ) const
 {
 	x_min = ( po_s.x < po_e.x ) ? po_s.x : po_e.x;
