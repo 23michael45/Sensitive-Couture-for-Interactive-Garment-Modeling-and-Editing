@@ -33,37 +33,37 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "delfem/cad/cad_edge2d_polyline.h"
 
-namespace Cad{
+namespace Cad {
 
-/*! 
-@brief 2D cad class that element can be moved
-@ingroup CAD
-*/
-class CCadObj2D_Move : public Cad::CCadObj2D
-{
-public:
-	//! move vertex (ID:id_v) to vec_dist
-	bool MoveVertex( unsigned int id_v, const Com::CVector2D& vec);
-  //! move vertices to each distinations 
-	bool MoveVertex( const std::vector< std::pair<unsigned int,Com::CVector2D> >& vec );
-	//! move veretex (ID:id_e) with direction vec_delta
-	bool MoveEdge(unsigned int id_e, const Com::CVector2D& vec_delta);
-	//! move loop (ID:id_l) with direction vec_delta
-	bool MoveLoop(unsigned int id_l, const Com::CVector2D& vec_delta);
+	/*!
+	@brief 2D cad class that element can be moved
+	@ingroup CAD
+	*/
+	class CCadObj2D_Move : public Cad::CCadObj2D
+	{
+	public:
+		//! move vertex (ID:id_v) to vec_dist
+		bool MoveVertex(unsigned int id_v, const Com::CVector2D& vec);
+		//! move vertices to each distinations 
+		bool MoveVertex(const std::vector< std::pair<unsigned int, Com::CVector2D> >& vec);
+		//! move veretex (ID:id_e) with direction vec_delta
+		bool MoveEdge(unsigned int id_e, const Com::CVector2D& vec_delta);
+		//! move loop (ID:id_l) with direction vec_delta
+		bool MoveLoop(unsigned int id_l, const Com::CVector2D& vec_delta);
 
-  //! if edge (ID:id_e) is an arc make it go through point(dist)
-  bool DragArc(unsigned int id_e, const Com::CVector2D& dist);
-  //! if edge (ID:id_e) is an polyline make it go through point(dist)
-  bool DragPolyline(unsigned int id_e, const Com::CVector2D& dist);
-  
-  bool PreCompDragPolyline(unsigned int id_e, const Com::CVector2D& pick_pos);
-  // smoothing edge (id_e) if radius is negative smooth whole edge 
-  bool SmoothingPolylineEdge(unsigned int id_e, unsigned int niter,
-                             const Com::CVector2D& pos, double radius);
-  
-private:
-  CCadEdge2DPolyline polyline;
-};
+		//! if edge (ID:id_e) is an arc make it go through point(dist)
+		bool DragArc(unsigned int id_e, const Com::CVector2D& dist);
+		//! if edge (ID:id_e) is an polyline make it go through point(dist)
+		bool DragPolyline(unsigned int id_e, const Com::CVector2D& dist);
+
+		bool PreCompDragPolyline(unsigned int id_e, const Com::CVector2D& pick_pos);
+		// smoothing edge (id_e) if radius is negative smooth whole edge 
+		bool SmoothingPolylineEdge(unsigned int id_e, unsigned int niter,
+			const Com::CVector2D& pos, double radius);
+
+	private:
+		CCadEdge2DPolyline polyline;
+	};
 
 }	// end namespace CAD
 
