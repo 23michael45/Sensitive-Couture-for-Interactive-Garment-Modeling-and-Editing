@@ -16,40 +16,40 @@ class CContactTarget3D;
 class CFrictionPoint
 {
 public:
-  CFrictionPoint(){
-    is_pin = false;
-  }
+	CFrictionPoint() {
+		is_pin = false;
+	}
 public:
 	double pd;
 	double aloc[3];
 	int itype_contact;	// 0:not_contact 1:static contact 2:dynamic contact
-  bool is_pin;
+	bool is_pin;
 };
 
 void Update_FrictionalContact
 (const CContactTarget3D& ct, double stiff_n, double stiff_f, double myu_s, double myu_k,
- double offset,
- unsigned int id_field_disp,
- Fem::Field::CFieldWorld& world,
- std::vector<CFrictionPoint>& aFrictionPoint );
+	double offset,
+	unsigned int id_field_disp,
+	Fem::Field::CFieldWorld& world,
+	std::vector<CFrictionPoint>& aFrictionPoint);
 
 
 bool AddLinSys_FrictionalContact_Penalty_NonStatic_BackwardEular
 (double dt,
- Fem::Ls::CLinearSystem_Field& ls, 
- const CContactTarget3D& ct, double stiff_n, double stiff_f, double myu_s, double myu_k,
- double offset,
- unsigned int id_field_disp, 
- Fem::Field::CFieldWorld& world,
- std::vector<CFrictionPoint>& aFrictionPoint );
+	Fem::Ls::CLinearSystem_Field& ls,
+	const CContactTarget3D& ct, double stiff_n, double stiff_f, double myu_s, double myu_k,
+	double offset,
+	unsigned int id_field_disp,
+	Fem::Field::CFieldWorld& world,
+	std::vector<CFrictionPoint>& aFrictionPoint);
 
 bool AddLinSys_FrictionalContact_Penalty_NonStatic_Sensitivity
-(Fem::Ls::CLinearSystem_Field& ls, 
- const CContactTarget3D& ct, double stiff_n, double stiff_f, double myu_s, double myu_k,
- double offset,
- unsigned int id_field_disp, 
- Fem::Field::CFieldWorld& world,
- std::vector<CFrictionPoint>& aFrictionPoint );
+(Fem::Ls::CLinearSystem_Field& ls,
+	const CContactTarget3D& ct, double stiff_n, double stiff_f, double myu_s, double myu_k,
+	double offset,
+	unsigned int id_field_disp,
+	Fem::Field::CFieldWorld& world,
+	std::vector<CFrictionPoint>& aFrictionPoint);
 
 
 #endif

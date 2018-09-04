@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /*! @file
-@brief ‚QŸŒ³ƒƒbƒVƒ…‚ÌUtilityŠÖ”ŒQ
+@brief ï¼’æ¬¡å…ƒãƒ¡ãƒƒã‚·ãƒ¥ã®Utilityé–¢æ•°ç¾¤
 @author Nobuyuki Umetani
 */
 
@@ -43,37 +43,37 @@ namespace Msh
 //! @{
 
 ////////////////////////////////////////////////
-// ‚±‚±‚©‚ç–{“–‚Í‹¤—L‚³‚¹‚½‚¢
+// æˆ‘çœŸçš„æƒ³è®©ä½ åœ¨è¿™é‡Œå…±äº«
 
 const double MIN_TRI_AREA = 1.0e-10;
 
-const unsigned int nNoEd  = 2;	//!< ü•ª‚É‚¢‚­‚ç“_‚ª‚ ‚é‚©
+const unsigned int nNoEd  = 2;	//!< ç·šåˆ†ã«ã„ãã‚‰ç‚¹ãŒã‚ã‚‹ã‹
 
-const unsigned int nNoTri = 3;	//!< ‚RŠpŒ`‚É‚¢‚­‚ç’¸“_‚ª‚ ‚é‚©
-const unsigned int nEdTri = 3;	//!< ‚RŠpŒ`‚É‚¢‚­‚ç•Ó‚ª‚ ‚é‚©
-//! ‚RŠpŒ`‚ÌŠe•Ó‚Ì’¸“_”Ô†
+const unsigned int nNoTri = 3;	//!< ï¼“è§’å½¢ã«ã„ãã‚‰é ‚ç‚¹ãŒã‚ã‚‹ã‹
+const unsigned int nEdTri = 3;	//!< ï¼“è§’å½¢ã«ã„ãã‚‰è¾ºãŒã‚ã‚‹ã‹
+//! ï¼“è§’å½¢ã®å„è¾ºã®é ‚ç‚¹ç•ªå·
 const unsigned int noelTriEdge[nEdTri][nNoEd] = {	
 	{ 1, 2 },
 	{ 2, 0 },
 	{ 0, 1 },
 };
-//! ‚RŠpŒ`‚Ì—×ÚŠÖŒW
+//! ï¼“è§’å½¢ã®éš£æ¥é–¢ä¿‚
 const unsigned int relTriTri[3][3] = {
 	{ 0, 2, 1 }, //  0
 	{ 2, 1, 0 }, //  1 
 	{ 1, 0, 2 }, //  2
 };
 
-const unsigned int nNoQuad = 4;	//!< ‚SŠpŒ`‚É‚¢‚­‚ç’¸“_‚ª‚ ‚é‚©
-const unsigned int nEdQuad = 4;	//!< ‚SŠpŒ`‚É‚¢‚­‚ç•Ó‚ª‚ ‚é‚©
-//! ‚SŠpŒ`‚ÌŠe•Ó‚Ì’¸“_”Ô†
+const unsigned int nNoQuad = 4;	//!< å››è§’å½¢æœ‰å¤šå°‘é¡¶ç‚¹
+const unsigned int nEdQuad = 4;	//!< å››è§’å½¢æœ‰å¤šå°‘è¾¹
+//! å››è§’å½¢çš„å„ä¸ªè¾¹çš„é¡¶ç‚¹ç¼–å·
 const unsigned int noelQuadEdge[nEdQuad][nNoEd] = {	
 	{ 0, 1 },
 	{ 1, 2 },
 	{ 2, 3 },
 	{ 3, 0 }
 };
-//! ‚SŠpŒ`‚Ì—×ÚŠÖŒW
+//! å››æ–¹å½¢çš„é‚»æ¥å…³ç³»
 static const unsigned int relQuadQuad[nNoQuad][nNoQuad] = {
 	{ 0, 3, 2, 1 }, //  0
 	{ 1, 0, 3, 2 }, //  1
@@ -81,11 +81,11 @@ static const unsigned int relQuadQuad[nNoQuad][nNoQuad] = {
 	{ 3, 2, 1, 0 }, //  3
 };
 
-//! •Ó—v‘f\‘¢‘Ì
+//! è¾ºè¦ç´ æ§‹é€ ä½“
 struct SBar{
-	unsigned int v[2];	//!< ’¸“_”Ô†
+	unsigned int v[2];	//!< é¡¶ç‚¹ç¼–å·
 	////////////////
-    // ¶‘¤‚ª‚O‰E‘¤‚ª1
+    // å·¦è¾¹æ˜¯0å³ä¾§1
 	unsigned int s2[2];
 	unsigned int r2[2];
 };
@@ -93,26 +93,26 @@ struct SBar{
 
 ////////////////////////////////////////////////////////////////
 
-//! ‚SŠpŒ`—v‘f\‘¢‘Ì
+//! ï¼”è§’å½¢è¦ç´ æ§‹é€ ä½“
 struct SQuad2D{
-	unsigned int v[4];	//!< ’¸“_Index
-	int g2[4];			//!< —×Ú‚·‚é—v‘f”z—ñID(-1:—×Ú—v‘f‚È‚µA-2:©•ª‚Ì—v‘f”z—ñ‚É—×Ú)
-	unsigned int s2[4];	//!< —×Ú—v‘fIndex
-	unsigned int r2[4];			//!< —×ÚŠÖŒW
+	unsigned int v[4];	//!< é ‚ç‚¹Index
+	int g2[4];			//!< éš£æ¥ã™ã‚‹è¦ç´ é…åˆ—ID(-1:éš£æ¥è¦ç´ ãªã—ã€-2:è‡ªåˆ†ã®è¦ç´ é…åˆ—ã«éš£æ¥)
+	unsigned int s2[4];	//!< éš£æ¥è¦ç´ Index
+	unsigned int r2[4];			//!< éš£æ¥é–¢ä¿‚
 };
 
 
-//! ‚QŸŒ³‚RŠpŒ`—v‘f\‘¢‘Ì
+//! ï¼’æ¬¡å…ƒï¼“è§’å½¢è¦ç´ æ§‹é€ ä½“
 struct STri2D{
-	unsigned int v[3];	//!< ’¸“_Index
-    int g2[3];			//!< —×Ú‚·‚é—v‘f”z—ñID(-1:—×Ú—v‘f‚È‚µA-2:©•ª‚Ì—v‘f”z—ñ‚É—×Ú)
-	unsigned int s2[3];	//!< —×Ú—v‘fIndex
-    unsigned int r2[3];	//!< —×ÚŠÖŒW
+	unsigned int v[3];	//!< é ‚ç‚¹Index
+    int g2[3];			//!< éš£æ¥ã™ã‚‹è¦ç´ é…åˆ—ID(-1:éš£æ¥è¦ç´ ãªã—ã€-2:è‡ªåˆ†ã®è¦ç´ é…åˆ—ã«éš£æ¥)
+	unsigned int s2[3];	//!< éš£æ¥è¦ç´ Index
+    unsigned int r2[3];	//!< éš£æ¥é–¢ä¿‚
 };
 
 /*!
-@brief ‚QŸŒ³“_ƒNƒ‰ƒX
-(CPoint2D.e!=-1)‚È‚ç(aTri[e].no[d])‚ª‚±‚Ì“_‚Ì‘S‘Ìß“_”Ô†‚Å‚ ‚é‚Í‚¸
+@brief ï¼’æ¬¡å…ƒç‚¹ã‚¯ãƒ©ã‚¹
+(CPoint2D.e!=-1)ãªã‚‰(aTri[e].no[d])ãŒã“ã®ç‚¹ã®å…¨ä½“ç¯€ç‚¹ç•ªå·ã§ã‚ã‚‹ã¯ãš
 */
 class CPoint2D{
 public:
@@ -122,104 +122,104 @@ public:
 	CPoint2D(double x, double y, int ielem, unsigned int idir)
 		: p(x,y), e(ielem), d(idir){}
 public:
-    Com::CVector2D p;   //!< “_‚ÌÀ•W
-    int e;              //!< “_‚ğˆÍ‚Ş—v‘f‚Ì‚¤‚¿ˆê‚Â‚Ì”Ô†(ŒÇ—§‚µ‚Ä‚¢‚é“_‚È‚ç-1‚ª“ü‚é)
-    unsigned int d;     //!< “_‚ğˆÍ‚Ş—v‘fe‚Ì—v‘f“àß“_”Ô†
+    Com::CVector2D p;   //!< ç‚¹ã®åº§æ¨™
+    int e;              //!< ç‚¹ã‚’å›²ã‚€è¦ç´ ã®ã†ã¡ä¸€ã¤ã®ç•ªå·(å­¤ç«‹ã—ã¦ã„ã‚‹ç‚¹ãªã‚‰-1ãŒå…¥ã‚‹)
+    unsigned int d;     //!< ç‚¹ã‚’å›²ã‚€è¦ç´ eã®è¦ç´ å†…ç¯€ç‚¹ç•ªå·
 };
 
 ////////////////////////////////////////////////////////////////
 
-//! “_‚ğˆÍ‚ŞOŠpŒ`‚ÌƒŠƒXƒg‚ğì‚é
+//! åˆ¶ä½œå›´ç»•ç‚¹çš„ä¸‰è§’å½¢çš„åˆ—è¡¨
 bool MakePointSurTri(const std::vector<Msh::STri2D>& aTri, const unsigned int npoin, 
 		unsigned int* const elsup_ind, unsigned int& nelsup, unsigned int*& elsup );
 
-//! “_‚ğˆÍ‚Ş‚SŠpŒ`‚ÌƒŠƒXƒg‚ğì‚é
+//! åˆ¶ä½œåŒ…å›´ç‚¹çš„å››ä¸ªä¸‰è§’å½¢çš„åˆ—è¡¨
 bool MakePointSurQuad(const std::vector<Msh::SQuad2D>& aQuad, const unsigned int npoin, 
 		unsigned int* const elsup_ind, unsigned int& nelsup, unsigned int*& elsup );
-//! “_‚ğˆÍ‚Şü•ª—v‘f‚ÌƒŠƒXƒg‚ğì‚é
+//! ç‚¹ã‚’å›²ã‚€ç·šåˆ†è¦ç´ ã®ãƒªã‚¹ãƒˆã‚’ä½œã‚‹
 bool MakePointSurBar( const std::vector<Msh::SBar>& aBar, const unsigned int npoin, 
 		unsigned int* const elsup_ind, unsigned int& nelsup, unsigned int*& elsup );
 
-//! ‚RŠpŒ`•ªŠ„‚Ì“à•”î•ñ(—×ÚŠÖŒW)‚ğì‚é
+//! ï¼“è§’å½¢åˆ†å‰²ã®å†…éƒ¨æƒ…å ±(éš£æ¥é–¢ä¿‚)ã‚’ä½œã‚‹
 bool MakeInnerRelationTri( std::vector<Msh::STri2D>& aTri, const unsigned int npoin, 
 	const unsigned int* elsup_ind, const unsigned int nelsup, const unsigned int* elsup);
-//! ‚SŠpŒ`•ªŠ„‚Ì“à•”î•ñ(—×ÚŠÖŒW)‚ğì‚é
+//! ï¼”è§’å½¢åˆ†å‰²ã®å†…éƒ¨æƒ…å ±(éš£æ¥é–¢ä¿‚)ã‚’ä½œã‚‹
 bool MakeInnerRelationQuad( std::vector<Msh::SQuad2D>& aQuad, const unsigned int npoin, 
 	const unsigned int* elsup_ind, const unsigned int nelsup, const unsigned int* elsup);
-//! ü•ª•ªŠ„‚Ì“à•”î•ñ(—×ÚŠÖŒW)‚ğì‚é.Tš˜AŒ‹‚ÍŠÜ‚Ü‚È‚¢‚Æ‚·‚é
+//! ç·šåˆ†åˆ†å‰²ã®å†…éƒ¨æƒ…å ±(éš£æ¥é–¢ä¿‚)ã‚’ä½œã‚‹.Tå­—é€£çµã¯å«ã¾ãªã„ã¨ã™ã‚‹
 //bool MakeInnerRelationBar( std::vector<Msh::SBar>& aBar );
 
-//! OŠpŒ`•ªŠ„‚ÌŠO‘¤‚ğˆÍ‚Ş•Ó—v‘f”z—ñ‚ğì‚é
+//! ä¸‰è§’å½¢åˆ†å‰²ã®å¤–å´ã‚’å›²ã‚€è¾ºè¦ç´ é…åˆ—ã‚’ä½œã‚‹
 bool MakeOuterBoundTri( const std::vector<Msh::STri2D>& aTri, std::vector<Msh::SBar>& aBar );
-//! ‚SŠpŒ`•ªŠ„‚ÌŠO‘¤‚ğˆÍ‚Ş•Ó—v‘f”z—ñ‚ğì‚é
+//! ï¼”è§’å½¢åˆ†å‰²ã®å¤–å´ã‚’å›²ã‚€è¾ºè¦ç´ é…åˆ—ã‚’ä½œã‚‹
 bool MakeOuterBoundQuad( const std::vector<Msh::SQuad2D>& aQuad, std::vector<Msh::SBar>& aBar );
 
-//! OŠpŒ`•ªŠ„‚Ì³“–«‚ğƒ`ƒFƒbƒN
+//! ä¸‰è§’å½¢åˆ†å‰²ã®æ­£å½“æ€§ã‚’ãƒã‚§ãƒƒã‚¯
 bool CheckTri( const std::vector<Msh::STri2D>& aTri );
-//! OŠpŒ`•ªŠ„‚Ì³“–«‚ğƒ`ƒFƒbƒN
+//! ä¸‰è§’å½¢åˆ†å‰²ã®æ­£å½“æ€§ã‚’ãƒã‚§ãƒƒã‚¯
 bool CheckTri( const std::vector<Msh::CPoint2D>& po, const std::vector<Msh::STri2D>& tri );
 
 /*!
-@brief “_‚ğ—v‘f“à•”‚É’Ç‰Á‚·‚é
-@param[in] ipo_ins  —v‘f‚É’Ç‰Á‚·‚é’¸“_‚Ì”Ô†
-@param[in] itri_ins ’Ç‰Á‚·‚é—v‘f‚Ì”Ô†
-@retval true    ¬Œ÷
-@retval false   ¸”s
+@brief ç‚¹ã‚’è¦ç´ å†…éƒ¨ã«è¿½åŠ ã™ã‚‹
+@param[in] ipo_ins  è¦ç´ ã«è¿½åŠ ã™ã‚‹é ‚ç‚¹ã®ç•ªå·
+@param[in] itri_ins è¿½åŠ ã™ã‚‹è¦ç´ ã®ç•ªå·
+@retval true    æˆåŠŸ
+@retval false   å¤±æ•—
 */
 bool InsertPoint_Elem( const unsigned int ipo_ins, const unsigned int itri_ins,
 					  std::vector<Msh::CPoint2D>& po, std::vector<Msh::STri2D>& tri );
-//! “_‚ğ—v‘f‚Ì•Ó‚É’Ç‰Á‚·‚é
+//! ç‚¹ã‚’è¦ç´ ã®è¾ºã«è¿½åŠ ã™ã‚‹
 bool InsertPoint_ElemEdge( const unsigned int ipo_ins,
     const unsigned int itri_ins, const unsigned int ied_ins,
 	std::vector<Msh::CPoint2D>& po, std::vector<Msh::STri2D>& tri );
 
-//! “_ü‚è‚Ìƒfƒ[ƒj•ªŠ„
+//! ç‚¹å‘¨ã‚Šã®ãƒ‡ãƒ­ãƒ¼ãƒ‹åˆ†å‰²
 bool DelaunayAroundPoint( unsigned int ipo0,
 						 std::vector<Msh::CPoint2D>& po, std::vector<Msh::STri2D>& tri );
 
 /*!
-@brief “_ü‚è‚Ìƒfƒ[ƒj•ªŠ„
-num_flip‚Í•Ó‚ğFlip‚µ‚½‰ñ”‚ğˆø”‚É‘«‚µ‡‚í‚¹‚éD‚O‚Å‰Šú‰»‚Í‚µ‚È‚¢D
+@brief ç‚¹å‘¨ã‚Šã®ãƒ‡ãƒ­ãƒ¼ãƒ‹åˆ†å‰²
+num_flipã¯è¾ºã‚’Flipã—ãŸå›æ•°ã‚’å¼•æ•°ã«è¶³ã—åˆã‚ã›ã‚‹ï¼ï¼ã§åˆæœŸåŒ–ã¯ã—ãªã„ï¼
 */
 bool DelaunayAroundPoint( unsigned int itri, unsigned int inotri, 
 						 std::vector<Com::CVector2D>& aVec, std::vector<Msh::STri2D>& tri,
 						 unsigned int& num_flip);
-//! •Ó‚ğƒtƒŠƒbƒv‚·‚é
+//! è¾ºã‚’ãƒ•ãƒªãƒƒãƒ—ã™ã‚‹
 bool FlipEdge( unsigned int itri0, unsigned int ied0,  std::vector<Msh::STri2D>& aTri );
-//! •Ó‚ğƒtƒŠƒbƒv‚·‚é
+//! è¾ºã‚’ãƒ•ãƒªãƒƒãƒ—ã™ã‚‹
 bool FlipEdge( unsigned int itri0, unsigned int ied0,
 			  std::vector<Msh::CPoint2D>& aPo, std::vector<Msh::STri2D>& aTri );
-//! •Ó‚ğƒtƒŠƒbƒv‚·‚é
+//! è¾ºã‚’ãƒ•ãƒªãƒƒãƒ—ã™ã‚‹
 bool FindEdge( const unsigned int& ipo0, const unsigned int& ipo1,
 	unsigned int& itri0, unsigned int& inotri0, unsigned int& inotri1,
 	const std::vector<Msh::CPoint2D>& po, const std::vector<Msh::STri2D>& tri );
-//! ”¼’¼ü‚ğ‚Ü‚½‚®•Ó‚ğŒ©‚Â‚¯‚é
+//! åŠç›´ç·šã‚’ã¾ãŸãè¾ºã‚’è¦‹ã¤ã‘ã‚‹
 bool FindEdgePoint_AcrossEdge( const unsigned int& ipo0, const unsigned int& ipo1,
 	unsigned int& itri0, unsigned int& inotri0, unsigned int& inotri1, double& ratio,
 	std::vector<Msh::CPoint2D>& po, std::vector<Msh::STri2D>& tri );
 
-//! ƒMƒtƒgEƒ‰ƒbƒsƒ“ƒO–@‚É‚æ‚éOŠpŒ`•ªŠ„
+//! ã‚®ãƒ•ãƒˆãƒ»ãƒ©ãƒƒãƒ”ãƒ³ã‚°æ³•ã«ã‚ˆã‚‹ä¸‰è§’å½¢åˆ†å‰²
 bool Tesselate_GiftWrapping(
 	unsigned int ipo0, unsigned int ipo1,
 	std::vector< std::pair<unsigned int,unsigned int> >& aTriEd,
 	const std::vector<Com::CVector2D>& aPo, std::vector<Msh::STri2D>& aTri);
 
-//! OŠpŒ`•ªŠ„‚©‚ç‚P“_‚ğíœ
+//! ä¸‰è§’å½¢åˆ†å‰²ã‹ã‚‰ï¼‘ç‚¹ã‚’å‰Šé™¤
 bool DeletePointFromMesh(unsigned int ipoin, std::vector<Msh::CPoint2D>& aPo, std::vector<Msh::STri2D>& aTri);
-//! OŠpŒ`•ªŠ„‚©‚ç‚P—v‘f‚ğíœ
+//! ä¸‰è§’å½¢åˆ†å‰²ã‹ã‚‰ï¼‘è¦ç´ ã‚’å‰Šé™¤
 bool DeleteTri(unsigned int itri0, std::vector<Msh::CPoint2D>& aPo, std::vector<Msh::STri2D>& aTri);
 
-//! ƒ‰ƒvƒ‰ƒVƒAƒ“ƒXƒ€[ƒWƒ“ƒO
+//! ãƒ©ãƒ—ãƒ©ã‚·ã‚¢ãƒ³ã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°
 void LaplacianSmoothing( std::vector<Msh::CPoint2D>& aPo, const std::vector<Msh::STri2D>& aTri,
 	const std::vector<unsigned int>& aflg_isnt_move );
-//! ƒ‰ƒvƒ‰ƒVƒAƒ“ƒXƒ€[ƒWƒ“ƒO
+//! ãƒ©ãƒ—ãƒ©ã‚·ã‚¢ãƒ³ã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°
 void LaplaceDelaunaySmoothing( std::vector<Msh::CPoint2D>& aPo, std::vector<Msh::STri2D>& aTri,
 	const std::vector<unsigned int>& aflg_isnt_move );
-//! ƒoƒuƒ‹ƒƒbƒVƒ…‚ğ—p‚¢‚½ƒXƒ€[ƒWƒ“ƒO
+//! ãƒãƒ–ãƒ«ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ç”¨ã„ãŸã‚¹ãƒ ãƒ¼ã‚¸ãƒ³ã‚°
 void PliantBossenHeckbertSmoothing( double elen, std::vector<Msh::CPoint2D>& aPo, std::vector<Msh::STri2D>& aTri );
 
 
-//! BarAry‚ğF•ª‚¯‚·‚é
+//! BarAryã‚’è‰²åˆ†ã‘ã™ã‚‹
 void ColorCodeBarAry( const std::vector<SBar>& aBar, const std::vector<Com::CVector2D>& aVec, 
 					 std::vector< std::vector<unsigned int> >& aIndBarAry );
 

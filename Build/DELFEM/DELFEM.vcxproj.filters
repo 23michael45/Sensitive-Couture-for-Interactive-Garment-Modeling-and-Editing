@@ -1,0 +1,420 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\DelFEM">
+      <UniqueIdentifier>{e904c2c7-3ecd-47b9-ad4d-13143ee61fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\cad">
+      <UniqueIdentifier>{fb1317b2-6d2e-45d8-82e0-8cdd66e24aab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\com">
+      <UniqueIdentifier>{a68996af-d063-476f-9762-f5804b2f1ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\femeqn">
+      <UniqueIdentifier>{e8523c9a-1f87-4f87-b4c9-3085f5c576c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\femfield">
+      <UniqueIdentifier>{4cdfd45a-9f94-456a-8eb4-d717094b6f8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\femls">
+      <UniqueIdentifier>{3a9b3b48-95f3-46a3-b097-d423c6e86358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\ls">
+      <UniqueIdentifier>{ed3fb5b2-564c-400b-8635-16c764bff809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\matvec">
+      <UniqueIdentifier>{754c17e6-cde6-48ec-b47d-ac7e6caa5918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\msh">
+      <UniqueIdentifier>{ac587c89-db50-4eaa-ba4f-d80882ab01c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DelFEM\rigid">
+      <UniqueIdentifier>{eef88aeb-8e09-41d4-8259-1b44363e7ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut">
+      <UniqueIdentifier>{58b84ff4-2143-4b90-b46c-cb403de99bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\cad_view">
+      <UniqueIdentifier>{41556a5a-45fb-471e-8b65-2b604629fc31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\cad2d_edit">
+      <UniqueIdentifier>{e3313b85-2b95-4889-ba30-3371bbff67bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\cad3d">
+      <UniqueIdentifier>{d7778399-e176-4cf5-bb93-8d3b13472faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\dkt2d">
+      <UniqueIdentifier>{47662d2e-26e7-4ce1-9971-211084fa7286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\field_evaluate">
+      <UniqueIdentifier>{bcd5edb4-6561-4bb3-8f0f-8a13c0158827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\fluid2d">
+      <UniqueIdentifier>{59cc5085-be40-45dc-ae90-e1818dd54405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\helmholtz2d">
+      <UniqueIdentifier>{e87ddef0-d624-40b0-aa06-75003e96e177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\hyper3d">
+      <UniqueIdentifier>{ecd3a618-1c03-4de6-ad54-9038b0761696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\msh_view">
+      <UniqueIdentifier>{c656361a-9078-427e-88bd-f6e4be7fb2e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\rigid">
+      <UniqueIdentifier>{b1ee79d4-8f75-4682-8f25-b4c43c60a0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\scalar2d">
+      <UniqueIdentifier>{fff735d6-340f-446f-b59e-72c498497ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\scalar3d">
+      <UniqueIdentifier>{12c660aa-f478-4f77-92eb-7ab5ad890b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\solid2d">
+      <UniqueIdentifier>{d2052c53-db5b-4415-bc99-cdf354cbd894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\solid2d_thermal">
+      <UniqueIdentifier>{e8ab595c-f78f-41c4-b00a-5a793c1b2ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\solid3d">
+      <UniqueIdentifier>{3c862879-138b-462c-a24e-ec402c32af27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\test_glut\stvk_rigid">
+      <UniqueIdentifier>{b41d9243-ce5b-4ca9-b0cc-27753ad9ef97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\brep.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\brep2d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_edge2d_polyline.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_elem2d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_elem3d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_obj2d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_obj2d_move.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\cad_obj3d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\contact_target_cad3d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\drawer_cad.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\drawer_cad3d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\cad\truss2d.cpp">
+      <Filter>Source Files\DelFEM\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\drawer.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\drawer_gl_utility.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\quaternion.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\spatial_hash_grid2d.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\spatial_hash_grid3d.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\tri_ary_topology.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\uglyfont.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\com\vector3d.cpp">
+      <Filter>Source Files\DelFEM\com</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqnsys.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqnsys_fluid.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqnsys_scalar.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqnsys_shell.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqnsys_solid.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_advection_diffusion.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_diffusion.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_dkt.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_helmholtz.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_hyper.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_linear_solid2d.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_linear_solid3d.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_navier_stokes.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_poisson.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_stokes.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\eqn_st_venant.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femeqn\ker_emat_tri.cpp">
+      <Filter>Source Files\DelFEM\femeqn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field_edge.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field_face.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field_image_based_flow_vis.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field_streamline.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\drawer_field_vector.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\elem_ary.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\eval.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\field.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\field_value_setter.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\field_world.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femfield\node_ary.cpp">
+      <Filter>Source Files\DelFEM\femfield</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femls\linearsystem_field.cpp">
+      <Filter>Source Files\DelFEM\femls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femls\linearsystem_fieldsave.cpp">
+      <Filter>Source Files\DelFEM\femls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femls\zlinearsystem.cpp">
+      <Filter>Source Files\DelFEM\femls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\femls\zsolver_ls_iter.cpp">
+      <Filter>Source Files\DelFEM\femls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\ls\eigen_lanczos.cpp">
+      <Filter>Source Files\DelFEM\ls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\ls\linearsystem.cpp">
+      <Filter>Source Files\DelFEM\ls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\ls\preconditioner.cpp">
+      <Filter>Source Files\DelFEM\ls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\ls\solver_ls_iter.cpp">
+      <Filter>Source Files\DelFEM\ls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\matdiafrac_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\matdiainv_blkdia.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\matdia_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\matfrac_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\matprolong_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\mat_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\ordering_blk.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\solver_mat_iter.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\solver_mg.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\vector_blk.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\zmatdiafrac_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\zmatdia_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\zmat_blkcrs.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\zsolver_mat_iter.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\matvec\zvector_blk.cpp">
+      <Filter>Source Files\DelFEM\matvec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\drawer_msh.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\mesh3d.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\mesh3d_extrude.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\mesher2d.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\mesher2d_edit.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\mesher3d.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\meshkernel2d.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\meshkernel3d.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\msh\surface_mesh_reader.cpp">
+      <Filter>Source Files\DelFEM\msh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\rigid\linearsystem_rigid.cpp">
+      <Filter>Source Files\DelFEM\rigid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\rigid\linearsystem_rigidfield.cpp">
+      <Filter>Source Files\DelFEM\rigid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\src\rigid\rigidbody.cpp">
+      <Filter>Source Files\DelFEM\rigid</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\cad_view\cad_view.cpp">
+      <Filter>Source Files\test_glut\cad_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\cad2d_edit\cad2d_edit.cpp">
+      <Filter>Source Files\test_glut\cad2d_edit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\cad3d\cad3d.cpp">
+      <Filter>Source Files\test_glut\cad3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\dkt2d\dkt2d.cpp">
+      <Filter>Source Files\test_glut\dkt2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\field_evaluate\field_evaluate.cpp">
+      <Filter>Source Files\test_glut\field_evaluate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\fluid2d\fluid2d.cpp">
+      <Filter>Source Files\test_glut\fluid2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\helmholtz2d\helmholtz2d.cpp">
+      <Filter>Source Files\test_glut\helmholtz2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\hyper3d\hyper3d.cpp">
+      <Filter>Source Files\test_glut\hyper3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\msh_view\msh_view.cpp">
+      <Filter>Source Files\test_glut\msh_view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\stvk_rigid\stvk_rigid.cpp">
+      <Filter>Source Files\test_glut\stvk_rigid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\solid3d\solid3d.cpp">
+      <Filter>Source Files\test_glut\solid3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\solid2d_thermal\solid2d_thermal.cpp">
+      <Filter>Source Files\test_glut\solid2d_thermal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\solid2d\solid2d.cpp">
+      <Filter>Source Files\test_glut\solid2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\scalar3d\scalar3d.cpp">
+      <Filter>Source Files\test_glut\scalar3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\scalar2d\scalar2d.cpp">
+      <Filter>Source Files\test_glut\scalar2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SENSITIVE_COUTURE\DelFEM\test_glut\rigid\rigid.cpp">
+      <Filter>Source Files\test_glut\rigid</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

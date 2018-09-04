@@ -55,7 +55,7 @@ public:
 	SVertex() : id(0), id_v_cad(0), ilayer(0){}
 public:
 	unsigned int id;	//!< ID
-	unsigned int id_v_cad;	//!< vertex id in CADi0 if not related to CADj
+	unsigned int id_v_cad;	//!< vertex id in CADï¼ˆ0 if not related to CADï¼‰
 	int ilayer;
 	unsigned int v;	//!< index of node
 };
@@ -66,7 +66,7 @@ public:
 	CBarAry() : id(0), id_e_cad(0), ilayer(0){}
 public:
 	unsigned int id;	//!< ID
-	unsigned int id_e_cad;	//!< CAD‚Ì•ÓIDiCAD‚ÉŠÖ˜A‚³‚ê‚Ä‚È‚¯‚ê‚Î‚Oj
+	unsigned int id_e_cad;	//!< CADçš„è¾¹ç¼˜ID(å¦‚æœä¸æ¶‰åŠCADçš„è¯0)
 	unsigned int id_se[2];
 	unsigned int id_lr[2];
 	int ilayer;
@@ -79,7 +79,7 @@ public:
 	CTriAry2D() : id(0), id_l_cad(0), ilayer(0){}
 public:
 	unsigned int id;	//!< ID
-	unsigned int id_l_cad;	//!< CAD‚Ì–ÊIDiCAD‚ÉŠÖ˜A‚³‚ê‚Ä‚È‚¯‚ê‚Î‚Oj
+	unsigned int id_l_cad;	//!< CADçš„è¡¨é¢ID(å¦‚æœä¸æ¶‰åŠCADçš„è¯0)
 	int ilayer;
 	std::vector<STri2D> m_aTri;	//!< array of 2d triangle element
 };
@@ -90,7 +90,7 @@ public:
 	CQuadAry2D() : id(0), id_l_cad(0), ilayer(0){}
 public:
 	unsigned int id;	//!< ID
-	unsigned int id_l_cad;	//!< CAD‚Ì–ÊID(CAD‚ÉŠÖ˜A‚³‚ê‚Ä‚È‚¯‚ê‚Î‚O)
+	unsigned int id_l_cad;	//!< CADçš„è¡¨é¢ID(å¦‚æœä¸æ¶‰åŠCADçš„è¯0)
 	int ilayer;
 	std::vector<SQuad2D> m_aQuad;	//!< array of 2D quadric element
 };
@@ -98,16 +98,15 @@ public:
 ////////////////////////////////////////////////
 
 /*!
-@brief ‚QŸŒ³ƒƒbƒVƒ…ƒNƒ‰ƒX
+@brief ï¼’æ¬¡å…ƒãƒ¡ãƒƒã‚·ãƒ¥ã‚¯ãƒ©ã‚¹
 @ingroup Msh2D
-
-—v‘f‚Ìí—Ş‚ÉˆË‘¶‚¹‚¸‚É’Ê‚µ‚ÅID‚ªU‚ç‚ê‚Ä‚¢‚éD
-•Ó—v‘f‚ÉŠÖ‚µ‚Ä‚ÍCCAD‚Ì•Ó‚Æ“¯‚¶Œü‚«‚É—v‘f”Ô†‡‚É•À‚ñ‚Å‚¢‚éDi‰×d‹«ŠEğŒ‚©‚ç‚Ì§–ñj
+ä¸ä¾èµ–å…ƒç´ çš„ç§ç±»ï¼Œå°±é€šè¿‡äº†IDã€‚
+æœ‰å…³è¾¹è¦ç´ ï¼Œä¸CADçš„è¾¹ç›¸åŒåœ°æŒ‰è¦ç´ å·ç æ’åˆ—
 */
 class CMesher2D : public IMesh
 {
 public:
-	//! ‚Å‚«‚é‚¾‚¯­‚È‚¢—v‘f”‚ÅƒƒbƒVƒ…‚ğØ‚é
+	//! å°½é‡ç”¨å°‘çš„è¦ç´ æ¥åˆ‡ç¢
 	CMesher2D(const Cad::ICad2D_Msh& cad_2d){ 
 		this->m_imode_meshing = 0;
 		this->m_elen = 1;
@@ -116,7 +115,7 @@ public:
 		for(unsigned int i=0;i<aIdL.size();i++){ setIdLCad_CutMesh.insert(aIdL[i]); }
 		this->Meshing(cad_2d);
 	}
-	//! —v‘f‚Ì’·‚³‚ªelen‚Æ‚È‚é‚æ‚¤‚ÉƒƒbƒVƒ…‚ğØ‚é
+	//! ä¸ºäº†ä½¿è¦ç´ çš„é•¿åº¦æˆä¸ºelenä¸€æ ·åœ°åˆ‡æ–­
 	CMesher2D(const Cad::ICad2D_Msh& cad_2d, double elen){ 
 		this->m_imode_meshing = 2;
 		this->m_elen = elen;
@@ -125,7 +124,7 @@ public:
 		for(unsigned int i=0;i<aIdL.size();i++){ setIdLCad_CutMesh.insert(aIdL[i]); }
 		this->Meshing(cad_2d);
 	}
-	//! ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//! é»˜è®¤è½¬æ¢å™¨
 	CMesher2D(){
 		this->m_imode_meshing = 1;
 		this->m_elen = 0.1;
@@ -179,7 +178,7 @@ public:
 
 	////////////////////////////////
 
-	virtual unsigned int GetDimention() const{ return 2; }	//!< À•W‚ÌŸŒ³i‚Qj‚ğ•Ô‚·
+	virtual unsigned int GetDimention() const{ return 2; }	//!< è¿”å›åæ ‡çš„ç»´ï¼ˆ2ï¼‰
 	virtual void GetInfo(unsigned int id_msh,
                        unsigned int& id_cad, unsigned int& id_msh_before_ext, unsigned int& inum_ext,
                        int& ilayer) const
@@ -220,9 +219,9 @@ public:
 		return m_include_relation[id_msh];
 	}
 
-	/*! ƒƒbƒVƒ…‚ÌÚ‘±ŠÖŒW‚ğæ“¾‚·‚é
-	vectorƒRƒ“ƒeƒi‚Åƒf[ƒ^‚ğó‚¯“n‚µ‚·‚é‚Ì‚ÍCˆÀ‘S‚¾‚¯‚Ç’á‘¬
-	ƒ|ƒCƒ“ƒ^[‚ğ“n‚µ‚Äƒf[ƒ^‚Ìó‚¯“n‚µ‚ğÀ‘•‚·‚é—\’è
+	/*! å–å¾—ç½‘çŠ¶çš„è¿æ¥å…³ç³»
+		åœ¨é›†è£…ç®±ä¸­æ¥æ”¶æ•°æ®æ˜¯å®‰å…¨çš„ï¼Œä½†æ˜¯ä½é€Ÿ
+		å°†æŒ‡é’ˆä¼ é€’ç»™æ•°æ®çš„äº¤ä»˜
 	*/
   virtual MSH_TYPE GetConnectivity(unsigned int id_msh,std::vector<int>& lnods) const;
 
@@ -232,21 +231,21 @@ public:
 		const std::vector<unsigned int>& aIdMsh_Ind,
 		const std::vector<unsigned int>& aIdMshBar_Cut ) const;
 
-	//! ƒf[ƒ^‚ğ‚·‚×‚ÄƒNƒŠƒA‚·‚é
+	//! å…¨éƒ¨æ¸…é™¤æ•°æ®
 	virtual void Clear();
 
 	void SmoothingMesh_Laplace(unsigned int num_iter);
 	void SmoothingMesh_Delaunay(unsigned int& num_reconnect);
 
 	////////////////////////////////
-	// constŠÖ”
+	// åŒæ­¥å‡½æ•°
 	
 	unsigned int GetElemID_FromCadID(unsigned int id_cad,  Cad::CAD_ELEM_TYPE type_cad) const;
 	bool IsID(unsigned int id) const;
 	bool GetMshInfo(unsigned int id, unsigned int& nelem, MSH_TYPE& msh_type, unsigned int& iloc,  unsigned int& id_cad ) const;
 
 	////////////////////////////////
-	// —v‘f”z—ñAß“_”z—ñ‚ÉŠÖ‚·‚éGetƒƒ\ƒbƒh
+	// è¦ç´ æ’åˆ—ã€èŠ‚ç‚¹æ’åˆ—çš„Getæ–¹æ³•
     
 	const std::vector<CTriAry2D>& GetTriArySet() const { return m_aTriAry; }
 	const std::vector<CQuadAry2D>& GetQuadArySet() const { return m_aQuadAry; }
@@ -255,11 +254,11 @@ public:
 	const std::vector<Com::CVector2D>& GetVectorAry() const { return aVec2D; }
 
 	////////////////////////////////////////////////////////////////
-	// IOƒƒ\ƒbƒh
+	// IOãƒ¡ã‚½ãƒƒãƒ‰
 	
-	//! “Ç‚İ‚İ‘‚«o‚µ
+	//! è¯»å–è®°å½•
 	bool Serialize( Com::CSerializer& serialize, bool is_only_cadmshlink=false );
-	//! GiDƒƒbƒVƒ…‚Ì“Ç‚İ‚İ
+	//! è¯»å–GiDç½‘æ ¼
 	bool ReadFromFile_GiDMsh(const std::string& file_name);
 
 protected:
@@ -276,26 +275,26 @@ protected:
 		aVec2D.clear();
 	}
 	
-	//! ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‰Šú‰»‚³‚ê‚½Œã‚âCClear‚³‚ê‚½Œã‚ÅƒƒbƒVƒ…‚ğØ‚é(elen : ƒƒbƒVƒ…•)
+	//! åœ¨é»˜è®¤ç¼–è¯‘ä¸­åˆå§‹åŒ–åï¼Œåœ¨è¢«Clearureeååˆ‡ç¢
 	bool Meshing_ElemLength(const Cad::ICad2D_Msh& cad_2d,double elen,  const std::vector<unsigned int>& aIdLoop);
-	//! ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å‰Šú‰»‚³‚ê‚½Œã‚âCClear‚³‚ê‚½Œã‚ÅƒƒbƒVƒ…‚ğØ‚é(esize : —v‘f”)
+	//! åœ¨é»˜è®¤è½¬æ¢å™¨åˆå§‹åŒ–åï¼Œåœ¨è¢«Clearerä¹‹ååˆ‡æ–­ï¼ˆesise :è¦ç´ æ•°ï¼‰
 	bool Meshing_ElemSize( const Cad::ICad2D_Msh& cad_2d, unsigned int esize, const std::vector<unsigned int>& aIdLoop);
-	//! o—ˆ‚é‚¾‚¯“_‚ğ’Ç‰Á‚µ‚È‚¢‚æ‚¤‚ÉAƒƒbƒVƒ…‚ğØ‚é
+	//! ä¸ºäº†ä¸å°½å¯èƒ½åœ°å¢åŠ ç‚¹ï¼Œæ‰€ä»¥è¦å‰ªæ‰
 	bool Tesselation(const Cad::ICad2D_Msh& cad_2d, const std::vector<unsigned int>& aIdLoop);
 
 	unsigned int FindMaxID() const;
-	int CheckMesh();	// ˆÙí‚ª‚È‚¯‚ê‚Î‚O‚ğ•Ô‚·
+	int CheckMesh();	// æ— å¼‚å¸¸è¿˜é›¶
 	unsigned int GetFreeObjID();
-	void MakeElemLocationType(); // —v‘f‚ÌêŠ‚Æí—Ş‚ğƒnƒbƒVƒ…iID‚ªˆø”j‚µ‚Ä‚¢‚é”z—ñ‚ğ‰Šú‰»
-	void MakeIncludeRelation(const Cad::ICad2D_Msh& cad);	// include_relation‚ğì‚é
+	void MakeElemLocationType(); // åˆå§‹åŒ–å…ƒç´ çš„ä½ç½®å’Œç§ç±»ï¼ˆIDä¸ºæ•°ï¼‰çš„æ’åˆ—
+	void MakeIncludeRelation(const Cad::ICad2D_Msh& cad);	// include_relationã‚’ä½œã‚‹
 
 	////////////////
 	bool MakeBoundary_SplitBarAry(std::vector<SBar>& aBar, unsigned int id_inner);
-	// ‚à‚µ‚àis_inverted == true‚È‚çmax_aspect‚Í–³Œø‚È’l‚ª“ü‚é
+	// å¦‚æœis mistel = = trueçš„è¯ï¼Œmax speceæ˜¯æ— æ•ˆçš„å€¼
 	void CheckMeshQuality(bool& is_inverted, double& max_aspect, const double ave_edge_len);
 
 	////////////////
-	// ƒƒbƒVƒ…Ø‚èŠÖŒW‚Ìƒ‹[ƒeƒBƒ“
+	// åˆ‡åˆå…³ç³»çš„ç¨‹åº
 
 	bool MakeMesh_Edge(const Cad::ICad2D_Msh& cad_2d, unsigned int id_e, const double len);
 	bool MakeMesh_Loop(const Cad::ICad2D_Msh& cad_2d, unsigned int id_l, const double len);
@@ -305,7 +304,7 @@ protected:
 	bool Tesselate_Loop(const Cad::ICad2D_Msh& cad_2d, const unsigned int id_l);
 
 	////////////////////////////////
-	// ƒgƒ|ƒƒW[æ“¾
+	// ç ”ç©¶è·å–
 
 	bool GetMesh_FrontBackStartEnd(unsigned int id_msh_bar, 
 		unsigned int& id_msh_f, unsigned int& id_msh_b, 
@@ -328,14 +327,14 @@ protected:
 		const std::vector<unsigned int>& aFlgMshCut ) const;
 
 	////////////////////////////////
-	// CAD‚Æ‚ÌÚ‘±ŠÖŒW‚Ìƒ‹[ƒeƒBƒ“
+	// ä¸CADè¿æ¥å…³ç³»çš„ç¨‹åº
 
-	// ‚à‚µ‚±‚±‚ÉƒƒbƒVƒ…‚ªØ‚ç‚ê‚Ä‚¢‚È‚¢‚Æfalse‚ğ•Ô‚·
+	// ä¸CADçš„è¿æ¥å…³ç³»çš„å¢ä¸å¦‚æœæ²¡æœ‰è¢«åˆ‡æ–­çš„è¯ä¼šè¿”å›fale
 	bool FindElemLocType_CadIDType(
 		unsigned int& iloc, unsigned int& itype, 
 		unsigned int id_cad_part, Cad::CAD_ELEM_TYPE itype_cad );
 
-	// ‚±‚Ìƒ‹[ƒv‚Ì–ÊÏ‚ÆCŒ»İØ‚ç‚ê‚Ä‚¢‚éƒƒbƒVƒ…‚©‚çÅ“K‚È•Ó‚Ì’·‚³‚ğŒˆ’è‚·‚é
+	// è¿™ä¸ªå¾ªç¯çš„é¢ç§¯å’Œç°åœ¨è¢«åˆ‡æ–­çš„ç½‘çŠ¶å†³å®šæœ€é€‚åˆè¾¹çš„é•¿åº¦
 	double GetAverageEdgeLength(const Cad::ICad2D_Msh& cad_2d, 
                               const std::set<unsigned int>& aIdL);
 private:

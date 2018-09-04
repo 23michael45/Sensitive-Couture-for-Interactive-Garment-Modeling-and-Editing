@@ -1,3 +1,4 @@
+#pragma once
 /*
  *  glut_utility.h
  *  dfm_core
@@ -6,6 +7,9 @@
  *  Copyright 2011 The University of Tokyo. All rights reserved.
  *
  */
+#ifndef GLUT_UTILITY
+#define GLUT_UTILITY
+
 
 void RenderBitmapString(float x, float y, void *font,char *string)
 {
@@ -106,3 +110,6 @@ void ShowFPS(){
   if( is_texture ){ glEnable(GL_TEXTURE_2D); }
   if( is_lighting ){ ::glEnable(GL_LIGHTING); }  
 }
+
+
+#endif //GLUT_UTILITY
